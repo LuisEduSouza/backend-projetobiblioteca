@@ -7,7 +7,7 @@ export class Aluno {
     /* Identificador do aluno */
     private idAluno: number = 0;
     /* Registro acadêmico do aluno */
-    private ra: string;
+    private ra: string = '';
     /* Nome do aluno */
     private nome: string;
     /* Sobrenome do aluno */
@@ -23,8 +23,6 @@ export class Aluno {
 
     /**
      * Construtor da classe Aluno
-     * 
-     * @param ra Registro acadêmico do aluno
      * @param nome Nome do aluno
      * @param sobrenome Sobrenome do aluno
      * @param dataNascimento Data de nascimento do aluno
@@ -33,7 +31,6 @@ export class Aluno {
      * @param celular Número de celular do aluno
      */
     constructor(
-        ra: string,
         nome: string,
         sobrenome: string,
         dataNascimento: Date,
@@ -41,7 +38,6 @@ export class Aluno {
         email: string,
         celular: string
     ) {
-        this.ra = ra;
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.dataNascimento = dataNascimento;
