@@ -1,4 +1,4 @@
-CREATE DATABASE Biblioteca
+--CREATE DATABASE Biblioteca
 
 -- CREATE ALUNO - TRIGGER - FUNCTION
 CREATE SEQUENCE seq_ra START 1;
@@ -124,16 +124,16 @@ VALUES
 
 INSERT INTO Emprestimo (id_aluno, id_livro, data_emprestimo, data_devolucao, status_emprestimo)
 VALUES 
-(21,20, '2024-10-01', '2024-10-15', 'Em andamento'),
-(30,12, '2024-10-02', '2024-10-16', 'Em andamento'),
-(24,13, '2024-10-03', '2024-10-17', 'Em andamento'),
-(29, 16, '2024-10-04', '2024-10-18', 'Em andamento'),
-(25, 17, '2024-10-05', '2024-10-19', 'Em andamento'),
-(26, 18, '2024-10-06', '2024-10-20', 'Em andamento'),
-(27, 14, '2024-10-07', '2024-10-21', 'Em andamento'),
-(28, 19, '2024-10-08', '2024-10-22', 'Em andamento'),
-(23, 15, '2024-10-09', '2024-10-23', 'Em andamento'),
-(22, 11, '2024-10-10', '2024-10-24', 'Em andamento');
+(11,20, '2024-10-01', '2024-10-15', 'Em andamento'),
+(20,12, '2024-10-02', '2024-10-16', 'Em andamento'),
+(14,13, '2024-10-03', '2024-10-17', 'Em andamento'),
+(19, 16, '2024-10-04', '2024-10-18', 'Em andamento'),
+(15, 17, '2024-10-05', '2024-10-19', 'Em andamento'),
+(16, 18, '2024-10-06', '2024-10-20', 'Em andamento'),
+(17, 14, '2024-10-07', '2024-10-21', 'Em andamento'),
+(18, 19, '2024-10-08', '2024-10-22', 'Em andamento'),
+(13, 15, '2024-10-09', '2024-10-23', 'Em andamento'),
+(12, 11, '2024-10-10', '2024-10-24', 'Em andamento');
 
 SELECT * FROM ALUNO;
 SELECT * FROM LIVRO;
