@@ -1,3 +1,8 @@
+import { DatabaseModel } from "./DatabaseModel";
+
+// armazenei o pool de conexões
+const database = new DatabaseModel().pool;
+
 /**
  * Classe que representa um aluno.
  */
@@ -173,5 +178,80 @@ export class Aluno {
      */
     public setCelular(celular: string): void {
         this.celular = celular;
+    }
+
+    /**
+     * Busca e retorna uma lista de alunos do banco de dados.
+     * @returns Um array de objetos do tipo `Aluno` em caso de sucesso ou `null` se ocorrer um erro durante a consulta.
+     * 
+     * - A função realiza uma consulta SQL para obter todas as informações da tabela "aluno".
+     * - Os dados retornados do banco de dados são usados para instanciar objetos da classe `Aluno`.
+     * - Cada aluno é adicionado a uma lista que será retornada ao final da execução.
+     * - Se houver falha na consulta ao banco, a função captura o erro, exibe uma mensagem no console e retorna `null`.
+     */
+    static async listagemAlunos(): Promise<Array<Aluno> | null> {
+        const listaDeAlunos: Array<Aluno> = [];
+        try {
+            const querySelectAlunos = `SELECT * FROM aluno;`;
+            const respostaBD = await database.query(querySelectAlunos);
+            respostaBD.rows.forEach((linha) => {
+                const novoAluno = new Aluno(
+                    linha.nome,
+                    linha.sobrenome,
+                    linha.data_nascimento,
+                    linha.endereco,
+                    linha.email,
+                    linha.celular
+                );
+                novoAluno.setIdAluno(linha.id_aluno);
+                novoAluno.setRa(linha.ra);
+                listaDeAlunos.push(novoAluno);
+            });
+            return listaDeAlunos;
+        } catch (error) {
+            console.log('Erro ao buscar lista de alunos');
+            return null;
+        }
+    }
+
+    /**
+     * Realiza o cadastro de um aluno no banco de dados.
+     * 
+     * Esta função recebe um objeto do tipo `Aluno` e insere seus dados (nome, sobrenome, data de nascimento,
+     * endereço, email e celular) na tabela `Aluno` do banco de dados. O método retorna um valor booleano
+     * indicando se o cadastro foi realizado com sucesso.
+     * 
+     * @param {Aluno} aluno - Objeto contendo os dados do aluno que será cadastrado. O objeto `Aluno`
+     *                        deve conter os métodos `getNome()`, `getSobrenome()`, `getDataNascimento()`,
+     *                        `getEndereco()`, `getEmail()` e `getCelular()` que retornam os respectivos
+     *                        valores do aluno.
+     * @returns {Promise<boolean>} - Retorna `true` se o aluno foi cadastrado com sucesso e `false` caso contrário.
+     *                               Em caso de erro durante o processo, a função trata o erro e retorna `false`.
+     * 
+     * @throws {Error} - Se ocorrer algum erro durante a execução do cadastro, uma mensagem de erro é exibida
+     *                   no console junto com os detalhes do erro.
+     */
+    static async cadastroAluno(aluno: Aluno): Promise<boolean> {
+        try {
+            const queryInsertAluno = `INSERT INTO Aluno (nome, sobrenome, data_nascimento, endereco, email, celular) 
+                                        VALUES 
+                                    ('${aluno.getNome()}', 
+                                    '${aluno.getSobrenome()}', 
+                                    '${aluno.getDataNascimento()}', 
+                                    '${aluno.getEndereco()}', 
+                                    '${aluno.getEmail()}', 
+                                    '${aluno.getCelular()}')
+                                    RETURNING id_aluno;`;
+            const respostaBD = await database.query(queryInsertAluno);
+            if (respostaBD.rowCount != 0) {
+                console.log(`Aluno cadastrado com sucesso! ID do aluno: ${respostaBD.rows[0].id_aluno}`);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('Erro ao cadastrar o aluno. Verifique os logs para mais detalhes.');
+            console.log(error);
+            return false;
+        }
     }
 }

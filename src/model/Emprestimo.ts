@@ -1,3 +1,9 @@
+import { DatabaseModel } from "./DatabaseModel";
+
+// armazenei o pool de conexões
+const database = new DatabaseModel().pool;
+
+
 /**
  * Classe que representa um empréstimo de livro.
  */
@@ -136,4 +142,51 @@ export class Emprestimo {
     public setStatusEmprestimo(statusEmprestimo: string): void {
         this.statusEmprestimo = statusEmprestimo;
     }
+
+    /**
+     * Busca e retorna uma lista de empréstimos do banco de dados.
+     * @returns Um array de objetos do tipo `Emprestimo` em caso de sucesso ou `null` se ocorrer um erro durante a consulta.
+     * 
+     * - A função realiza uma consulta SQL para obter todas as informações da tabela "emprestimo".
+     * - Os dados retornados do banco de dados são usados para instanciar objetos da classe `Emprestimo`.
+     * - Cada empréstimo é adicionado a uma lista que será retornada ao final da execução.
+     * - Se houver falha na consulta ao banco, a função captura o erro, exibe uma mensagem no console e retorna `null`.
+     */
+    static async listagemEmprestimos(): Promise<Array<Emprestimo> | null> {
+        // objeto para armazenar a lista de empréstimos
+        const listaDeEmprestimo: Array<Emprestimo> = [];
+
+        try {
+            // query de consulta ao banco de dados
+            const querySelectEmprestimos = `SELECT * FROM emprestimo;`;
+
+            // fazendo a consulta e guardando a resposta
+            const respostaBD = await database.query(querySelectEmprestimos);
+
+            // usando a resposta para instanciar objetos do tipo Emprestimo
+            respostaBD.rows.forEach((linha) => {
+                // instancia (cria) objeto Emprestimo
+                const novoEmprestimo = new Emprestimo(
+                    linha.id_livro,
+                    linha.id_aluno,
+                    linha.data_emprestimo,
+                    linha.data_devolucao,
+                    linha.status_emprestimo
+                );
+
+                // atribui o ID do empréstimo baseado na resposta do banco de dados
+                novoEmprestimo.setIdEmprestimo(linha.id_emprestimo);
+
+                // adiciona o objeto na lista
+                listaDeEmprestimo.push(novoEmprestimo);
+            });
+
+            // retorna a lista de empréstimos
+            return listaDeEmprestimo;
+        } catch (error) {
+            console.log('Erro ao buscar lista de empréstimos');
+            return null; // retorna null em caso de erro
+        }
+    }
 }
+
