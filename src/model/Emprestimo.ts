@@ -154,31 +154,43 @@ export class Emprestimo {
      */
     static async listagemEmprestimos(): Promise<Array<Emprestimo> | null> {
         // objeto para armazenar a lista de empréstimos
-        const listaDeEmprestimo: Array<Emprestimo> = [];
+        const listaDeEmprestimo: Array<any> = [];
 
         try {
             // query de consulta ao banco de dados
-            const querySelectEmprestimos = `SELECT * FROM emprestimo;`;
+            const querySelectEmprestimos = `SELECT 
+            emprestimo.id_emprestimo,
+            emprestimo.id_aluno,
+            emprestimo.id_livro,
+            emprestimo.data_emprestimo,
+            emprestimo.data_devolucao,
+            emprestimo.status_emprestimo,
+            aluno.nome AS nome_aluno,
+            livro.titulo AS titulo_livro
+        FROM 
+            emprestimo
+        JOIN 
+            aluno ON emprestimo.id_aluno = aluno.id_aluno
+        JOIN 
+            livro ON emprestimo.id_livro = livro.id_livro;`;
 
             // fazendo a consulta e guardando a resposta
             const respostaBD = await database.query(querySelectEmprestimos);
 
             // usando a resposta para instanciar objetos do tipo Emprestimo
             respostaBD.rows.forEach((linha) => {
-                // instancia (cria) objeto Emprestimo
-                const novoEmprestimo = new Emprestimo(
-                    linha.id_livro,
-                    linha.id_aluno,
-                    linha.data_emprestimo,
-                    linha.data_devolucao,
-                    linha.status_emprestimo
-                );
-
-                // atribui o ID do empréstimo baseado na resposta do banco de dados
-                novoEmprestimo.setIdEmprestimo(linha.id_emprestimo);
-
+                 let emprestimo = {
+                    idEmprestimo: linha.id_emprestimo,
+                    idAluno: linha.id_aluno,
+                    idLivro: linha.id_livro,
+                    dataEmprestimo: linha.data_emprestimo,
+                    dataDevolucao: linha.data_devolucao,
+                    statusEmprestimo: linha.status_emprestimo,
+                    nomeAluno: linha.nome_aluno,
+                    tituloLivro: linha.titulo_livro
+                }
                 // adiciona o objeto na lista
-                listaDeEmprestimo.push(novoEmprestimo);
+                listaDeEmprestimo.push(emprestimo);
             });
 
             // retorna a lista de empréstimos
