@@ -347,4 +347,27 @@ export class Livro {
             return false; // retorna false em caso de erro
         }
     }
+
+    static async removerLivro(idLivro: number): Promise<boolean> {
+        try {
+            // query para fazer delete de um livro no banco de dados
+            const queryDeleteLivro = `DELETE FROM livro WHERE id_livro = ${idLivro};`;
+
+            // executa a query no banco e armazena a resposta do banco de dados
+            const respostaBD = await database.query(queryDeleteLivro);
+
+            // verifica se a quantidade de linhas alteradas é diferente de 0
+            if (respostaBD.rowCount != 0) {
+                console.log(`Livro removido com sucesso! ID do livro: ${idLivro}`);
+                // true significa que a remoção foi bem-sucedida
+                return true;
+            }
+            // false significa que a remoção NÃO foi bem-sucedida.
+            return false;
+        } catch (error) {
+            console.log('Erro ao remover o livro. Verifique os logs para mais detalhes.');
+            console.log(error);
+            return false;
+        }
+    }
 }

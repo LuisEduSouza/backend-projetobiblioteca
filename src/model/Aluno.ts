@@ -254,4 +254,27 @@ export class Aluno {
             return false;
         }
     }
+
+    static async removerAluno(idAluno: number): Promise<boolean> {
+        try {
+            // query para fazer delete de um aluno no banco de dados
+            const queryDeleteAluno = `DELETE FROM aluno WHERE id_aluno = ${idAluno};`;
+
+            // executa a query no banco e armazena a resposta do banco de dados
+            const respostaBD = await database.query(queryDeleteAluno);
+
+            // verifica se a quantidade de linhas alteradas é diferente de 0
+            if (respostaBD.rowCount != 0) {
+                console.log(`Aluno removido com sucesso! ID do aluno: ${idAluno}`);
+                // true significa que a remoção foi bem-sucedida
+                return true;
+            }
+            // false significa que a remoção NÃO foi bem-sucedida.
+            return false;
+        } catch (error) {
+            console.log('Erro ao remover o aluno. Verifique os logs para mais detalhes.');
+            console.log(error);
+            return false;
+        }
+    }
 }

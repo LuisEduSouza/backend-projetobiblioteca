@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Emprestimo } from "../model/Emprestimo";
+import { Livro } from "../model/Livro";
 
 /**
  * Controlador para gerenciar as operações de empréstimos na API.
@@ -30,6 +31,31 @@ export class EmprestimoController extends Emprestimo {
             
             // Retorna uma mensagem de erro com status 400
             return res.status(400).json({ mensagem: "Não foi possível acessar a listagem de empréstimos" });
+        }
+    }
+
+    static async remover(req: Request, res: Response): Promise<any> {
+        try {
+            // recuperando o id do empréstimo que será removido
+            const idEmprestimo = parseInt(req.params.idEmprestimo as string);
+
+            // chamando a função de remoção de empréstimo
+            const respostaModelo = await Emprestimo.removerEmprestimo(idEmprestimo);
+
+            // verificando a resposta da função
+            if (respostaModelo) {
+                // retornar uma mensagem de sucesso
+                return res.status(200).json({ mensagem: "Empréstimo removido com sucesso!" });
+            } else {
+                // retorna uma mensagem de erro
+                return res.status(400).json({ mensagem: "Erro ao remover o Empréstimo. Entre em contato com o administrador do sistema." });
+            }
+        } catch (error) {
+            // lança uma mensagem de erro no console
+            console.log(`Erro ao remover um empréstimo. ${error}`);
+
+            // retorna uma mensagem de erro para quem chamou a função
+            return res.status(400).json({ mensagem: "Não foi possível remover o empréstimo. Entre em contato com o administrador do sistema." });
         }
     }
 }

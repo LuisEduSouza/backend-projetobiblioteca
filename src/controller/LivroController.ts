@@ -84,4 +84,31 @@ export class LivroController extends Livro {
             return res.status(400).json({ mensagem: "Não foi possível cadastrar o livro. Entre em contato com o administrador do sistema." });
         }
     }
+
+    static async remover(req: Request, res: Response): Promise<any> {
+        try {
+            // recuperando o id do livro que será removido
+            const idLivro = parseInt(req.params.idLivro as string);
+
+            // chamando a função de remoção de livro
+            const respostaModelo = await Livro.removerLivro(idLivro);
+
+            // verificando a resposta da função
+            if (respostaModelo) {
+                // retornar uma mensagem de sucesso
+                return res.status(200).json({ mensagem: "Livro removido com sucesso!" });
+            } else {
+                // retorna uma mensagem de erro
+                return res.status(400).json({ mensagem: "Erro ao remover o livro. Entre em contato com o administrador do sistema." });
+            }
+        } catch (error) {
+            // lança uma mensagem de erro no console
+            console.log(`Erro ao remover um livro. ${error}`);
+
+            // retorna uma mensagem de erro para quem chamou a função
+            return res.status(400).json({ mensagem: "Não foi possível remover o livro. Entre em contato com o administrador do sistema." });
+        }
+    }
 }
+
+
