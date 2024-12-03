@@ -1,0 +1,344 @@
+{
+	"info": {
+		"_postman_id": "8dfefe0a-1ba8-4c7a-a82e-527253b03eb7",
+		"name": "Projeto Biblioteca",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38148719"
+	},
+	"item": [
+		{
+			"name": "ROTAS ALUNO",
+			"item": [
+				{
+					"name": "ATUALIZAR ALUNO",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"John\",\r\n    \"sobrenome\": \"Kennedy\",\r\n    \"dataNascimento\": \"2008-4-03\",\r\n    \"endereco\": \"Rua Futebol, 009\",\r\n    \"email\":\"urso@futebol.com\",\r\n    \"celular\": \"16998620628\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/atualizar/aluno/7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"atualizar",
+								"aluno",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LISTAR ALUNOS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3333/lista/alunos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"lista",
+								"alunos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CADASTRO ALUNO",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Zé\",\r\n    \"sobrenome\": \"Rafael\",\r\n    \"dataNascimento\": \"2008-4-03\",\r\n    \"endereco\": \"Rua Futebol, 008\",\r\n    \"email\":\"trem@futebol.com\",\r\n    \"celular\": \"16988620628\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/novo/aluno",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"novo",
+								"aluno"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETAR ALUNO",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3333/delete/aluno/29",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"delete",
+								"aluno",
+								"29"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ROTAS LIVRO",
+			"item": [
+				{
+					"name": "LISTAR LIVROS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3333/lista/livros",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"lista",
+								"livros"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CADASTRO LIVRO",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titulo\": \"Diario de um banana 2024\",\r\n    \"autor\": \"Jeff Kinney\", \r\n    \"editora\": \"VERGARA & RIBA\",\r\n    \"anoPublicacao\" : \"2007\",\r\n    \"isbn\": \"978-0140442875\",\r\n    \"quantTotal\": 4,\r\n    \"quantDisponivel\": 4,\r\n    \"valorAquisicao\": 120,\r\n    \"statusLivroEmprestado\": \"Em andamento\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/novo/livro",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"novo",
+								"livro"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETAR LIVRO",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3333/delete/livro/28",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"delete",
+								"livro",
+								"28"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ATUALIZAR LIVRO",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titulo\": \"Diario de um banana 2024\",\r\n    \"autor\": \"Jeff Kinney\", \r\n    \"editora\": \"VERGARA & RIBA\",\r\n    \"anoPublicacao\" : \"2007\",\r\n    \"isbn\": \"978-0140442875\",\r\n    \"quantTotal\": 4,\r\n    \"quantDisponivel\": 4,\r\n    \"valorAquisicao\": 120,\r\n    \"statusLivroEmprestado\": \"Em andamento\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/atualizar/livro/7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"atualizar",
+								"livro",
+								"7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ROTAS EMPRESTIMOS",
+			"item": [
+				{
+					"name": "CADASTRO EMPRESTIMO",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idAluno\": 21,\r\n    \"idLivro\": 19, \r\n    \"dataEmprestimo\": \"2024-10-03\",\r\n    \"dataDevolucao\" : \"2024-12-03\",\r\n    \"statusEmprestimo\": \"Em andamento\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/novo/emprestimo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"novo",
+								"emprestimo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ATUALIZAR EMPRESTIMO",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idAluno\": 19,\r\n    \"idLivro\": 24, \r\n    \"dataEmprestimo\": \"2024-10-03\",\r\n    \"dataDevolucao\" : \"2024-12-03\",\r\n    \"statusEmprestimo\": \"Em andamento\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/atualizar/emprestimo/18",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"atualizar",
+								"emprestimo",
+								"18"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LISTAR EMPRESTIMOS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3333/lista/emprestimos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"lista",
+								"emprestimos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETAR EMPRESTIMO",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3333/delete/emprestimo/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"delete",
+								"emprestimo",
+								"11"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ROTA PRINCIPAL",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3333/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
