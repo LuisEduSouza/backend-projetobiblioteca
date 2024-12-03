@@ -1,6 +1,13 @@
 import { Request, Response } from "express";
 import { Emprestimo } from "../model/Emprestimo";
-import { Livro } from "../model/Livro";
+
+interface EmprestimoDTO {
+    idAluno: number;
+    idLivro: number;
+    dataEmprestimo: Date;
+    dataDevolucao: Date;
+    statusEmprestimo: string;
+}
 
 /**
  * Controlador para gerenciar as operações de empréstimos na API.
@@ -34,6 +41,40 @@ export class EmprestimoController extends Emprestimo {
         }
     }
 
+    static async novo(req: Request, res: Response): Promise<any> {
+        try {
+            // Recupera os dados do corpo da requisição
+            const emprestimoRecebido: EmprestimoDTO = req.body;
+
+            // Instancia um novo objeto com os dados recebidos
+            const novoEmprestimo = new Emprestimo(
+                emprestimoRecebido.idAluno,
+                emprestimoRecebido.idLivro,
+                emprestimoRecebido.dataEmprestimo,
+                emprestimoRecebido.dataDevolucao,
+                emprestimoRecebido.statusEmprestimo
+            );
+
+            // Chama a função de cadastro passando o novo emprestimo como parâmetro
+            const respostaClasse = await Emprestimo.cadastroEmprestimo(novoEmprestimo);
+
+            // Verifica se o cadastro foi realizado com sucesso
+            if (respostaClasse) {
+                // Retorna uma mensagem de sucesso
+                return res.status(200).json({ mensagem: "Empréstimo cadastrado com sucesso!" });
+            } else {
+                // Retorna uma mensagem de erro
+                return res.status(400).json({ mensagem: "Erro ao cadastrar o empréstimo. Entre em contato com o administrador do sistema." });
+            }
+        } catch (error) {
+            // Lança uma mensagem de erro no console
+            console.log('Erro ao cadastrar empréstimo:', error);
+
+            // Retorna uma mensagem de erro ao emprestimo
+            return res.status(400).json({ mensagem: "Não foi possível cadastrar o empréstimo. Entre em contato com o administrador do sistema." });
+        }
+    }
+
     static async remover(req: Request, res: Response): Promise<any> {
         try {
             // recuperando o id do empréstimo que será removido
@@ -56,6 +97,45 @@ export class EmprestimoController extends Emprestimo {
 
             // retorna uma mensagem de erro para quem chamou a função
             return res.status(400).json({ mensagem: "Não foi possível remover o empréstimo. Entre em contato com o administrador do sistema." });
+        }
+    }
+
+    static async atualizar(req: Request, res: Response): Promise<any> {
+        try {
+            // recuperando o id que será atualizado
+            const idEmprestimoRecebido = parseInt(req.params.idEmprestimo as string);
+
+            // recuperando as informações que serão atualizadas
+            const emprestimoRecebido: EmprestimoDTO = req.body;
+
+            // instanciando um objeto com as informações recebidas
+            const emprestimoAtualizado = new Emprestimo(emprestimoRecebido.idAluno,
+                emprestimoRecebido.idLivro,
+                emprestimoRecebido.dataEmprestimo,
+                emprestimoRecebido.dataDevolucao,
+                emprestimoRecebido.statusEmprestimo
+                );
+
+            // setando o id que será atualizado
+            emprestimoAtualizado.setIdEmprestimo(idEmprestimoRecebido);
+
+            // chamando a função de atualização
+            const resposta = await Emprestimo.atualizarEmprestimo(emprestimoAtualizado);
+
+            // verificando a resposta da função
+            if (resposta) {
+                // retornar uma mensagem de sucesso
+                return res.status(200).json({ mensagem: "Empréstimo atualizado com sucesso!" });
+            } else {
+                // retorno uma mensagem de erro
+                return res.status(400).json({ mensagem: "Erro ao atualizar o empréstimo. Entre em contato com o administrador do sistema." })
+            }
+        } catch (error) {
+            // lança uma mensagem de erro no console
+            console.log(`Erro ao atualizar um empréstimo. ${error}`);
+
+            // retorna uma mensagem de erro há quem chamou a mensagem
+            return res.status(400).json({ mensagem: "Não foi possível atualizar o empréstimo. Entre em contato com o administrador do sistema." });
         }
     }
 }

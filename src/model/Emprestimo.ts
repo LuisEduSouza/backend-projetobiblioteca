@@ -1,3 +1,4 @@
+import e from "cors";
 import { DatabaseModel } from "./DatabaseModel";
 
 // armazenei o pool de conexões
@@ -166,6 +167,7 @@ export class Emprestimo {
             emprestimo.data_devolucao,
             emprestimo.status_emprestimo,
             aluno.nome AS nome_aluno,
+            aluno.sobrenome AS sobrenome_aluno,
             livro.titulo AS titulo_livro
         FROM 
             emprestimo
@@ -187,6 +189,7 @@ export class Emprestimo {
                     dataDevolucao: linha.data_devolucao,
                     statusEmprestimo: linha.status_emprestimo,
                     nomeAluno: linha.nome_aluno,
+                    sobrenomeAluno: linha.sobrenome_aluno,
                     tituloLivro: linha.titulo_livro
                 }
                 // adiciona o objeto na lista
@@ -198,6 +201,29 @@ export class Emprestimo {
         } catch (error) {
             console.log('Erro ao buscar lista de empréstimos');
             return null; // retorna null em caso de erro
+        }
+    }
+
+    static async cadastroEmprestimo(emprestimo: Emprestimo): Promise<boolean> {
+        try {
+            const queryInsertEmprestimo = `INSERT INTO emprestimo (id_aluno, id_livro, data_emprestimo, data_devolucao, status_emprestimo) 
+                                        VALUES 
+                                    ('${emprestimo.getIdAluno()}', 
+                                    '${emprestimo.getIdLivro()}', 
+                                    '${emprestimo.getDataEmprestimo()}', 
+                                    '${emprestimo.getDataDevolucao()}', 
+                                    '${emprestimo.getStatusEmprestimo()}' )
+                                    RETURNING id_emprestimo;`;
+            const respostaBD = await database.query(queryInsertEmprestimo);
+            if (respostaBD.rowCount != 0) {
+                console.log(`Empréstimo cadastrado com sucesso! ID do emprestimo: ${respostaBD.rows[0].id_emprestimo}`);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('Erro ao cadastrar o emprestimo. Verifique os logs para mais detalhes.');
+            console.log(error);
+            return false;
         }
     }
 
@@ -219,6 +245,35 @@ export class Emprestimo {
             return false;
         } catch (error) {
             console.log('Erro ao remover o empréstimo. Verifique os logs para mais detalhes.');
+            console.log(error);
+            return false;
+        }
+    }
+
+    static async atualizarEmprestimo(emprestimo: Emprestimo): Promise<boolean> {
+        try {
+            // query para fazer update no banco de dados
+            const queryUpdateEmprestimo= `UPDATE emprestimo SET 
+                                    id_aluno = '${emprestimo.getIdAluno()}',
+                                    id_livro = '${emprestimo.getIdLivro()}',
+                                    data_emprestimo = '${emprestimo.getDataEmprestimo()}',
+                                    data_devolucao = '${emprestimo.getDataDevolucao()}',
+                                    status_emprestimo = '${emprestimo.getStatusEmprestimo()}'
+                                    WHERE id_emprestimo = ${emprestimo.getIdEmprestimo()};`;
+
+            // executa a query no banco de dados
+            const respostaBD = await database.query(queryUpdateEmprestimo);
+
+            // verifica se a quantidade de linhas modificadas é diferente de 0
+            if (respostaBD.rowCount != 0) {
+                console.log(`Empréstimo atualizado com sucesso! ID do Empréstimo: ${emprestimo.getIdEmprestimo()}`);
+                // true significa que a atualização foi realizada
+                return true;
+            }
+            // false significa que a atualização NÃO foi realizada
+            return false;
+        } catch (error) {
+            console.log('Erro ao atualizar o empréstimo. Verifique os logs para mais detalhes.');
             console.log(error);
             return false;
         }

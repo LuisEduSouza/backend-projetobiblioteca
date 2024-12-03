@@ -370,4 +370,37 @@ export class Livro {
             return false;
         }
     }
+    
+    static async atualizarLivro(livro: Livro): Promise<boolean> {
+        try {
+            // query para fazer update no banco de dados
+            const queryUpdateLivro = `UPDATE livro SET 
+                                    titulo = '${livro.getTitulo()}',
+                                    autor = '${livro.getAutor()}',
+                                    editora = '${livro.getEditora()}',
+                                    ano_publicacao = '${livro.getAnoPublicacao()}',
+                                    isbn = '${livro.getIsbn()}',
+                                    quant_total = ${livro.getQuantTotal()},
+                                    quant_disponivel = ${livro.getQuantDisponivel()},
+                                    valor_aquisicao = ${livro.getValorAquisicao()},
+                                    status_livro_emprestado = '${livro.getStatusLivroEmprestado()}'
+                                    WHERE id_livro = ${livro.getIdLivro()};`;
+
+            // executa a query no banco de dados
+            const respostaBD = await database.query(queryUpdateLivro);
+
+            // verifica se a quantidade de linhas modificadas é diferente de 0
+            if (respostaBD.rowCount != 0) {
+                console.log(`Livro atualizado com sucesso! ID do livro: ${livro.getIdLivro()}`);
+                // true significa que a atualização foi realizada
+                return true;
+            }
+            // false significa que a atualização NÃO foi realizada
+            return false;
+        } catch (error) {
+            console.log('Erro ao atualizar o livro. Verifique os logs para mais detalhes.');
+            console.log(error);
+            return false;
+        }
+    }
 }
