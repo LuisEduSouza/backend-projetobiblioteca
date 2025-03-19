@@ -1,19 +1,21 @@
 import { server } from "./server";
 import { DatabaseModel } from "./model/DatabaseModel";
+import dotenv from 'dotenv';
 
+dotenv.config();
 
-//definindo a porta do servidor 
+//Define a porta que o servidor vai escutar as requisições
 const port: number = 3333;
 
-
 new DatabaseModel().testeConexao().then((resdb) => {
-    if(resdb){
-        console.log('Conexão com banco de dados realizada com sucesso.');
+    if (resdb) {
+        console.clear();
+        console.log("Conexão com banco de dados realizada com sucesso!");
         // iniciando o servidor
-        server.listen(port, ()  => {
-            console.log(`Servidor iniciado no endereço http://localhost:${port}`);
+        server.listen(port, () => {
+            console.log(`Servidor iniciado no endereço :${port}`);
         });
-    } else{
-        console.log('Erro ao conectar ao banco de dados.');
+    } else {
+        console.log("Erro ao conectar com o banco de dados");
     }
 });

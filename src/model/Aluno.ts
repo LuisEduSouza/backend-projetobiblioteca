@@ -25,6 +25,8 @@ export class Aluno {
     private email: string;
     /* Número de celular do aluno */
     private celular: string;
+    /* Controla o status do aluno no sistema */
+    private statusAluno: boolean = true;
 
     /**
      * Construtor da classe Aluno
@@ -34,6 +36,7 @@ export class Aluno {
      * @param endereco Endereço residencial do aluno
      * @param email E-mail do aluno
      * @param celular Número de celular do aluno
+     * @param statusAluno Status do aluno no sistema
      */
     constructor(
         nome: string,
@@ -181,6 +184,23 @@ export class Aluno {
     }
 
     /**
+    * Retorna o status do aluno
+    * @returns status: status aluno
+    */
+    public getStatusAluno() {
+        return this.statusAluno;
+    }
+
+    /**
+     * Atribui um valor ao atributo status do aluno
+     * 
+     * @param _statusAluno : status do aluno
+     */
+    public setStatusAluno(_statusAluno: boolean) {
+        this.statusAluno = _statusAluno;
+    }
+
+    /**
      * Busca e retorna uma lista de alunos do banco de dados.
      * @returns Um array de objetos do tipo `Aluno` em caso de sucesso ou `null` se ocorrer um erro durante a consulta.
      * 
@@ -205,6 +225,7 @@ export class Aluno {
                 );
                 novoAluno.setIdAluno(linha.id_aluno);
                 novoAluno.setRa(linha.ra);
+                novoAluno.setStatusAluno(linha.status_aluno);
                 listaDeAlunos.push(novoAluno);
             });
             return listaDeAlunos;
@@ -255,28 +276,40 @@ export class Aluno {
         }
     }
 
-    static async removerAluno(idAluno: number): Promise<boolean> {
+    static async removerAluno(id_aluno: number): Promise<Boolean> {
+        // variável para controle de resultado da consulta (query)
+        let queryResult = false;
+
         try {
-            // query para fazer delete de um aluno no banco de dados
-            const queryDeleteAluno = `DELETE FROM aluno WHERE id_aluno = ${idAluno};`;
+            // Cria a consulta (query) para remover o aluno
+            const queryDeleteEmprestimoAluno = `UPDATE emprestimo SET status_emprestimo_registro = FALSE WHERE id_aluno=${id_aluno}`;
 
-            // executa a query no banco e armazena a resposta do banco de dados
-            const respostaBD = await database.query(queryDeleteAluno);
+            // remove os emprestimos associado ao aluno
+            await database.query(queryDeleteEmprestimoAluno);
 
-            // verifica se a quantidade de linhas alteradas é diferente de 0
-            if (respostaBD.rowCount != 0) {
-                console.log(`Aluno removido com sucesso! ID do aluno: ${idAluno}`);
-                // true significa que a remoção foi bem-sucedida
-                return true;
-            }
-            // false significa que a remoção NÃO foi bem-sucedida.
-            return false;
+            // Construção da query SQL para deletar o Aluno.
+            const queryDeleteAluno = `UPDATE Aluno SET status_aluno = FALSE WHERE id_aluno=${id_aluno};`;
+
+            // Executa a query de exclusão e verifica se a operação foi bem-sucedida.
+            await database.query(queryDeleteAluno)
+                .then((result) => {
+                    if (result.rowCount != 0) {
+                        queryResult = true; // Se a operação foi bem-sucedida, define queryResult como true.
+                    }
+                });
+
+            // retorna o resultado da query
+            return queryResult;
+
+            // captura qualquer erro que aconteça
         } catch (error) {
-            console.log('Erro ao remover o aluno. Verifique os logs para mais detalhes.');
-            console.log(error);
-            return false;
+            // Em caso de erro na consulta, exibe o erro no console e retorna false.
+            console.log(`Erro na consulta: ${error}`);
+            // retorna false
+            return queryResult;
         }
     }
+
 
     static async atualizarAluno(aluno: Aluno): Promise<boolean> {
         try {

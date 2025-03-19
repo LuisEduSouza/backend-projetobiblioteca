@@ -1,5 +1,6 @@
 import { DatabaseModel } from "./DatabaseModel";
 
+// armazenei o pool de conexões
 const database = new DatabaseModel().pool;
 
 /**
@@ -28,6 +29,9 @@ export class Livro {
     private valorAquisicao: number;
     /* Status de empréstimo do livro */
     private statusLivroEmprestado: string;
+    /* Controla o status do livro no sistema */
+    private statusLivro: boolean = true;
+
 
     /**
      * Construtor da classe Livro
@@ -104,7 +108,7 @@ export class Livro {
      *
      * @returns {string} O autor do livro.
      */
-    public getAutor(): string{
+    public getAutor(): string {
         return this.autor;
     }
 
@@ -244,6 +248,24 @@ export class Livro {
     }
 
     /**
+    * Retorna o status do livro
+    * @returns status: status livro
+    */
+    public getStatusLivro() {
+        return this.statusLivro;
+    }
+
+    /**
+     * Atribui um valor ao atributo status do livro
+     * 
+     * @param _statusAluno : status do aluno
+     */
+    public setStatusLivro(_statusLivro: boolean) {
+        this.statusLivro = _statusLivro;
+    }
+
+
+    /**
      * Busca e retorna uma lista de livros do banco de dados.
      * @returns Um array de objetos do tipo `Livro` em caso de sucesso ou `null` se ocorrer um erro durante a consulta.
      * 
@@ -280,6 +302,7 @@ export class Livro {
 
                 // atribui o ID do livro baseado na resposta do banco de dados
                 novoLivro.setIdLivro(linha.id_livro);
+                novoLivro.setStatusLivro(linha.status_livro);
 
                 // adiciona o objeto na lista
                 listaDeLivro.push(novoLivro);
@@ -348,29 +371,44 @@ export class Livro {
         }
     }
 
-    static async removerLivro(idLivro: number): Promise<boolean> {
+    /**
+        * Remove um livro do banco de dados
+        * @param idLivro ID do livro a ser removido
+        * @returns Boolean indicando se a remoção foi bem-sucedida
+       */
+    static async removerLivro(id_livro: number): Promise<Boolean> {
+        // variável de controle da execução da query
+        let queryResult = false;
+
         try {
-            // query para fazer delete de um livro no banco de dados
-            const queryDeleteLivro = `DELETE FROM livro WHERE id_livro = ${idLivro};`;
+            // Cria a consulta para rmeover empréstimo do banco de dados
+            const queryDeleteEmprestimoLivro = `UPDATE emprestimo SET status_emprestimo_registro = FALSE WHERE id_livro=${id_livro}`;
+            // executa a query para remover empréstimo
+            await database.query(queryDeleteEmprestimoLivro);
 
-            // executa a query no banco e armazena a resposta do banco de dados
-            const respostaBD = await database.query(queryDeleteLivro);
+            // Construção da query SQL para deletar o Livro.
+            const queryDeleteLivro = `UPDATE livro SET status_livro = FALSE WHERE id_livro=${id_livro};`;
 
-            // verifica se a quantidade de linhas alteradas é diferente de 0
-            if (respostaBD.rowCount != 0) {
-                console.log(`Livro removido com sucesso! ID do livro: ${idLivro}`);
-                // true significa que a remoção foi bem-sucedida
-                return true;
-            }
-            // false significa que a remoção NÃO foi bem-sucedida.
-            return false;
+            // Executa a query de exclusão e verifica se a operação foi bem-sucedida.
+            await database.query(queryDeleteLivro)
+                .then((result) => {
+                    if (result.rowCount != 0) {
+                        queryResult = true; // Se a operação foi bem-sucedida, define queryResult como true.
+                    }
+                });
+
+            // retorna o valor da variável de controle
+            return queryResult;
+
+            // captura qualquer erro que possa acontecer
         } catch (error) {
-            console.log('Erro ao remover o livro. Verifique os logs para mais detalhes.');
-            console.log(error);
-            return false;
+            // Exibe detalhes do erro no console
+            console.log(`Erro na consulta: ${error}`);
+            // retorna o valor fa variável de controle
+            return queryResult;
         }
     }
-    
+
     static async atualizarLivro(livro: Livro): Promise<boolean> {
         try {
             // query para fazer update no banco de dados

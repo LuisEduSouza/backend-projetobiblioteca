@@ -1,45 +1,30 @@
-//import { Express } from "express";
-import { Request, Response, Router } from "express";
-import { AlunoController } from "./controller/AlunoController";
-import { LivroController } from "./controller/LivroController";
-import { EmprestimoController } from "./controller/EmprestimoController";
+import express from "express";
+import { SERVER_ROUTES } from "./appConfig";
+import AlunoController from "./controller/AlunoController";
+import LivroController  from "./controller/LivroController";
+import EmprestimoController  from "./controller/EmprestimoController";
 
-// Cria um roteador
-const router = Router();
+const router = express.Router();
 
-// Criando sua rota principal para a aplicação
-router.get("/", (req:Request, res:Response) => {
-    res.json({ mensagem: "Bem-vindo ao meu servidor"});
+router.get('/', (req, res) => {
+    res.json({ mensagem: "Rota padrão" })
 });
 
-// Rota para listar os alunos
-router.get("/lista/alunos", AlunoController.todos);
-//Rota para cadastro de alunos
-router.post("/novo/aluno", AlunoController.novo);
-//Rota para remover de alunos
-router.delete("/delete/aluno/:idAluno", AlunoController.remover);
-//Rota para atualização de alunos
-router.put("/atualizar/aluno/:idAluno", AlunoController.atualizar);
+// CRUD Aluno
+router.get(SERVER_ROUTES.LISTAR_ALUNOS, AlunoController.todos);
+router.post(SERVER_ROUTES.NOVO_ALUNO, AlunoController.novo);
+router.put(SERVER_ROUTES.REMOVER_ALUNO, AlunoController.remover);
+router.put(SERVER_ROUTES.ATUALIZAR_ALUNO, AlunoController.atualizar);
 
+//CRUD Livro
+router.get(SERVER_ROUTES.LISTAR_LIVROS, LivroController.todos);
+router.post(SERVER_ROUTES.NOVO_LIVRO, LivroController.novo);
+router.put(SERVER_ROUTES.REMOVER_LIVRO, LivroController.remover);
+router.put(SERVER_ROUTES.ATUALIZAR_LIVRO, LivroController.atualizar);
 
-// Rota para listar os livros
-router.get("/lista/livros", LivroController.todos);
-//Rota para cadastro de livro
-router.post("/novo/livro", LivroController.novo);
-//Rota para remover de livro
-router.delete("/delete/livro/:idLivro", LivroController.remover);
-//Rota para atualização de livros
-router.put("/atualizar/livro/:idLivro", LivroController.atualizar);
+//CRUD Emprestimo
+router.get(SERVER_ROUTES.LISTAR_EMPRESTIMOS, EmprestimoController.todos);
+router.post(SERVER_ROUTES.NOVO_EMPRESTIMO, EmprestimoController.novo);
+router.put(SERVER_ROUTES.ATUALIZAR_EMPRESTIMO, EmprestimoController.atualizar);
 
-
-// Rota para listar os empréstimos
-router.get("/lista/emprestimos", EmprestimoController.todos);
-//Rota para cadastro de empréstimos
-router.post("/novo/emprestimo", EmprestimoController.novo);
-//Rota para remover de empréstimo
-router.delete("/delete/emprestimo/:idEmprestimo", EmprestimoController.remover);
-//Rota para atualização de livros
-router.put("/atualizar/emprestimo/:idEmprestimo", EmprestimoController.atualizar);
-
-// Exportando as rotas
-export{ router };
+export { router }

@@ -14,7 +14,7 @@ interface AlunoDTO {
  * Controlador para gerenciar as operações de Aluno na API.
  * Esta classe herda de `Aluno` e implementa métodos para listar e cadastrar alunos.
  */
-export class AlunoController extends Aluno {
+class AlunoController extends Aluno {
 
     /**
      * Lista todos os alunos.
@@ -79,28 +79,26 @@ export class AlunoController extends Aluno {
         }
     }
 
+    /**
+     * Remove um aluno.
+     * @param req Objeto de requisição HTTP com o ID do aluno a ser removido.
+     * @param res Objeto de resposta HTTP.
+     * @returns Mensagem de sucesso ou erro em formato JSON.
+     */
     static async remover(req: Request, res: Response): Promise<any> {
         try {
-            // recuperando o id do aluno que será removido
-            const idAluno = parseInt(req.params.idAluno as string);
-
-            // chamando a função de remoção de aluno
-            const respostaModelo = await Aluno.removerAluno(idAluno);
-
-            // verificando a resposta da função
-            if (respostaModelo) {
-                // retornar uma mensagem de sucesso
-                return res.status(200).json({ mensagem: "Aluno removido com sucesso!" });
+            const idAluno = parseInt(req.params.idAluno);
+            const result = await Aluno.removerAluno(idAluno);
+            
+            if (result) {
+                return res.status(200).json('Aluno removido com sucesso');
             } else {
-                // retorna uma mensagem de erro
-                return res.status(400).json({ mensagem: "Erro ao remover o aluno. Entre em contato com o administrador do sistema." });
+                return res.status(401).json('Erro ao deletar aluno');
             }
         } catch (error) {
-            // lança uma mensagem de erro no console
-            console.log(`Erro ao remover um aluno. ${error}`);
-
-            // retorna uma mensagem de erro para quem chamou a função
-            return res.status(400).json({ mensagem: "Não foi possível remover o aluno. Entre em contato com o administrador do sistema." });
+            console.log("Erro ao remover o Aluno");
+            console.log(error);
+            return res.status(500).send("error");
         }
     }
 
@@ -145,3 +143,4 @@ export class AlunoController extends Aluno {
     }
 }
 
+export default AlunoController;

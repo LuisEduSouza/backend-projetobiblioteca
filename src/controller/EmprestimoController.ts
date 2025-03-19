@@ -13,7 +13,7 @@ interface EmprestimoDTO {
  * Controlador para gerenciar as operações de empréstimos na API.
  * Esta classe herda de `Emprestimo` e implementa métodos para listar empréstimos.
  */
-export class EmprestimoController extends Emprestimo {
+class EmprestimoController extends Emprestimo {
 
     /**
      * Lista todos os empréstimos.
@@ -75,7 +75,7 @@ export class EmprestimoController extends Emprestimo {
         }
     }
 
-    static async remover(req: Request, res: Response): Promise<any> {
+    static async remover(req: Request, res: Response): Promise<Response> {
         try {
             // recuperando o id do empréstimo que será removido
             const idEmprestimo = parseInt(req.params.idEmprestimo as string);
@@ -139,3 +139,5 @@ export class EmprestimoController extends Emprestimo {
         }
     }
 }
+
+export default EmprestimoController;

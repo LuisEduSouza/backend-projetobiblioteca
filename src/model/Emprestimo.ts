@@ -1,4 +1,3 @@
-import e from "cors";
 import { DatabaseModel } from "./DatabaseModel";
 
 // armazenei o pool de conexões
@@ -174,7 +173,8 @@ export class Emprestimo {
         JOIN 
             aluno ON emprestimo.id_aluno = aluno.id_aluno
         JOIN 
-            livro ON emprestimo.id_livro = livro.id_livro;`;
+            livro ON emprestimo.id_livro = livro.id_livro;
+        WHERE status_emprestimo_registro = true;`;
 
             // fazendo a consulta e guardando a resposta
             const respostaBD = await database.query(querySelectEmprestimos);
@@ -227,26 +227,43 @@ export class Emprestimo {
         }
     }
 
+/**
+     * Remove um emprétimo ativo do banco de dados
+     * 
+     * @param idEmprestimo 
+     * @returns **true** caso o empréstimo tenha sido resolvido, **false** caso contrário
+     */
     static async removerEmprestimo(idEmprestimo: number): Promise<boolean> {
-        try {
-            // query para fazer delete de um empréstimo no banco de dados
-            const queryDeleteEmprestimo = `DELETE FROM emprestimo WHERE id_emprestimo = ${idEmprestimo};`;
+        // variável de controle da query
+        let queryResult = false;
 
-            // executa a query no banco e armazena a resposta do banco de dados
+        // tenta executar a query
+        try {
+            // monta a query
+            const queryDeleteEmprestimo = `UPDATE emprestimo 
+                                            SET status_emprestimo_registro = FALSE
+                                            WHERE id_emprestimo=${idEmprestimo}`;
+
+            // executa a query e armazena a resposta
             const respostaBD = await database.query(queryDeleteEmprestimo);
 
-            // verifica se a quantidade de linhas alteradas é diferente de 0
-            if (respostaBD.rowCount != 0) {
-                console.log(`Empréstimo removido com sucesso! ID do emprestimo: ${idEmprestimo}`);
-                // true significa que a remoção foi bem-sucedida
-                return true;
+            // verifica se a quantidade de linhas retornadas é diferente de 0
+            if(respostaBD.rowCount != 0) {
+                // exibe mensagem de sucesso
+                console.log('Empréstimo removido com sucesso!');
+                // altera o valor da variável para true
+                queryResult = true;
             }
-            // false significa que a remoção NÃO foi bem-sucedida.
-            return false;
+
+            // retorna a resposta
+            return queryResult;
+
+        // captura qualquer erro que possa acontecer
         } catch (error) {
-            console.log('Erro ao remover o empréstimo. Verifique os logs para mais detalhes.');
-            console.log(error);
-            return false;
+            // exibe detalhes do erro no console
+            console.log(`Erro ao remover empréstimo: ${error}`);
+            // retorna a resposta
+            return queryResult;
         }
     }
 

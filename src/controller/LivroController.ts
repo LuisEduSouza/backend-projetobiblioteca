@@ -17,7 +17,7 @@ interface LivroDTO {
  * Controlador para gerenciar as operações de Livro na API.
  * Esta classe herda de `Livro` e implementa métodos para listar e cadastrar livros.
  */
-export class LivroController extends Livro {
+class LivroController extends Livro {
 
     /**
      * Lista todos os livros.
@@ -35,7 +35,7 @@ export class LivroController extends Livro {
         } catch (error) {
             // Lança uma mensagem de erro no console
             console.log('Erro ao acessar listagem de livros:', error);
-            
+
             // Retorna uma mensagem de erro ao cliente
             return res.status(400).json({ mensagem: "Não foi possível acessar a listagem de livros" });
         }
@@ -79,34 +79,32 @@ export class LivroController extends Livro {
         } catch (error) {
             // Lança uma mensagem de erro no console
             console.log('Erro ao cadastrar livro:', error);
-            
+
             // Retorna uma mensagem de erro ao cliente
             return res.status(400).json({ mensagem: "Não foi possível cadastrar o livro. Entre em contato com o administrador do sistema." });
         }
     }
 
+    /**
+    * Remove um aluno.
+    * @param req Objeto de requisição HTTP com o ID do aluno a ser removido.
+    * @param res Objeto de resposta HTTP.
+    * @returns Mensagem de sucesso ou erro em formato JSON.
+    */
     static async remover(req: Request, res: Response): Promise<any> {
         try {
-            // recuperando o id do livro que será removido
-            const idLivro = parseInt(req.params.idLivro as string);
+            const idLivro = parseInt(req.params.idLivro);
+            const result = await Livro.removerLivro(idLivro);
 
-            // chamando a função de remoção de livro
-            const respostaModelo = await Livro.removerLivro(idLivro);
-
-            // verificando a resposta da função
-            if (respostaModelo) {
-                // retornar uma mensagem de sucesso
-                return res.status(200).json({ mensagem: "Livro removido com sucesso!" });
+            if (result) {
+                return res.status(200).json('Livro removido com sucesso');
             } else {
-                // retorna uma mensagem de erro
-                return res.status(400).json({ mensagem: "Erro ao remover o livro. Entre em contato com o administrador do sistema." });
+                return res.status(401).json('Erro ao deletar livro');
             }
         } catch (error) {
-            // lança uma mensagem de erro no console
-            console.log(`Erro ao remover um livro. ${error}`);
-
-            // retorna uma mensagem de erro para quem chamou a função
-            return res.status(400).json({ mensagem: "Não foi possível remover o livro. Entre em contato com o administrador do sistema." });
+            console.log("Erro ao remover o Livro");
+            console.log(error);
+            return res.status(500).send("error");
         }
     }
 
@@ -128,7 +126,7 @@ export class LivroController extends Livro {
                 livroRecebido.quantDisponivel,
                 livroRecebido.valorAquisicao,
                 livroRecebido.statusLivroEmprestado
-                );
+            );
 
             // setando o id que será atualizado
             livroAtualizado.setIdLivro(idLivroRecebido);
@@ -154,4 +152,5 @@ export class LivroController extends Livro {
     }
 }
 
+export default LivroController;
 
