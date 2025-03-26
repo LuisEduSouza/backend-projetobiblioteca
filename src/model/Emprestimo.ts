@@ -23,6 +23,7 @@ export class Emprestimo {
     /* Status atual do empréstimo (ex: "ativo", "finalizado") */
     private statusEmprestimo: string;
 
+
     /**
      * Construtor da classe Emprestimo
      * 
@@ -173,7 +174,7 @@ export class Emprestimo {
         JOIN 
             aluno ON emprestimo.id_aluno = aluno.id_aluno
         JOIN 
-            livro ON emprestimo.id_livro = livro.id_livro;
+            livro ON emprestimo.id_livro = livro.id_livro
         WHERE status_emprestimo_registro = true;`;
 
             // fazendo a consulta e guardando a resposta
@@ -181,7 +182,7 @@ export class Emprestimo {
 
             // usando a resposta para instanciar objetos do tipo Emprestimo
             respostaBD.rows.forEach((linha) => {
-                 let emprestimo = {
+                let emprestimo = {
                     idEmprestimo: linha.id_emprestimo,
                     idAluno: linha.id_aluno,
                     idLivro: linha.id_livro,
@@ -192,6 +193,7 @@ export class Emprestimo {
                     sobrenomeAluno: linha.sobrenome_aluno,
                     tituloLivro: linha.titulo_livro
                 }
+                emprestimo.statusEmprestimo
                 // adiciona o objeto na lista
                 listaDeEmprestimo.push(emprestimo);
             });
@@ -227,12 +229,12 @@ export class Emprestimo {
         }
     }
 
-/**
-     * Remove um emprétimo ativo do banco de dados
-     * 
-     * @param idEmprestimo 
-     * @returns **true** caso o empréstimo tenha sido resolvido, **false** caso contrário
-     */
+    /**
+         * Remove um emprétimo ativo do banco de dados
+         * 
+         * @param idEmprestimo 
+         * @returns **true** caso o empréstimo tenha sido resolvido, **false** caso contrário
+         */
     static async removerEmprestimo(idEmprestimo: number): Promise<boolean> {
         // variável de controle da query
         let queryResult = false;
@@ -248,7 +250,7 @@ export class Emprestimo {
             const respostaBD = await database.query(queryDeleteEmprestimo);
 
             // verifica se a quantidade de linhas retornadas é diferente de 0
-            if(respostaBD.rowCount != 0) {
+            if (respostaBD.rowCount != 0) {
                 // exibe mensagem de sucesso
                 console.log('Empréstimo removido com sucesso!');
                 // altera o valor da variável para true
@@ -258,7 +260,7 @@ export class Emprestimo {
             // retorna a resposta
             return queryResult;
 
-        // captura qualquer erro que possa acontecer
+            // captura qualquer erro que possa acontecer
         } catch (error) {
             // exibe detalhes do erro no console
             console.log(`Erro ao remover empréstimo: ${error}`);
@@ -270,7 +272,7 @@ export class Emprestimo {
     static async atualizarEmprestimo(emprestimo: Emprestimo): Promise<boolean> {
         try {
             // query para fazer update no banco de dados
-            const queryUpdateEmprestimo= `UPDATE emprestimo SET 
+            const queryUpdateEmprestimo = `UPDATE emprestimo SET 
                                     id_aluno = '${emprestimo.getIdAluno()}',
                                     id_livro = '${emprestimo.getIdLivro()}',
                                     data_emprestimo = '${emprestimo.getDataEmprestimo()}',

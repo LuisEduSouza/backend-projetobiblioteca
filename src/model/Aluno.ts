@@ -212,7 +212,7 @@ export class Aluno {
     static async listagemAlunos(): Promise<Array<Aluno> | null> {
         const listaDeAlunos: Array<Aluno> = [];
         try {
-            const querySelectAlunos = `SELECT * FROM aluno;`;
+            const querySelectAlunos = `SELECT * FROM aluno WHERE status_aluno = TRUE;`;
             const respostaBD = await database.query(querySelectAlunos);
             respostaBD.rows.forEach((linha) => {
                 const novoAluno = new Aluno(

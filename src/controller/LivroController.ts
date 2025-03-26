@@ -97,9 +97,9 @@ class LivroController extends Livro {
             const result = await Livro.removerLivro(idLivro);
 
             if (result) {
-                return res.status(200).json('Livro removido com sucesso');
+                return res.status(200).json({ mensagem: "Livro removido com sucesso!" });
             } else {
-                return res.status(401).json('Erro ao deletar livro');
+                return res.status(401).json({ mensagem: "Erro ao deletar livro" });
             }
         } catch (error) {
             console.log("Erro ao remover o Livro");

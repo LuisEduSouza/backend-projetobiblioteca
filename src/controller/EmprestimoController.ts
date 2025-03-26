@@ -75,10 +75,10 @@ class EmprestimoController extends Emprestimo {
         }
     }
 
-    static async remover(req: Request, res: Response): Promise<Response> {
+    static async remover(req: Request, res: Response): Promise<any> {
         try {
             // recuperando o id do empréstimo que será removido
-            const idEmprestimo = parseInt(req.params.idEmprestimo as string);
+            const idEmprestimo = parseInt(req.params.idEmprestimo);
 
             // chamando a função de remoção de empréstimo
             const respostaModelo = await Emprestimo.removerEmprestimo(idEmprestimo);

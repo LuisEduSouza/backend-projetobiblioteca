@@ -91,9 +91,9 @@ class AlunoController extends Aluno {
             const result = await Aluno.removerAluno(idAluno);
             
             if (result) {
-                return res.status(200).json('Aluno removido com sucesso');
+                return res.status(200).json({ mensagem: "Aluno removido com sucesso!" });
             } else {
-                return res.status(401).json('Erro ao deletar aluno');
+                return res.status(401).json({ mensagem: "Erro ao deletar aluno" } );
             }
         } catch (error) {
             console.log("Erro ao remover o Aluno");
