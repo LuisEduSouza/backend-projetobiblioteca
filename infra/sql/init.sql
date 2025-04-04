@@ -1,9 +1,29 @@
---CREATE DATABASE Biblioteca
+/*
+-- Drop da trigger
+DROP TRIGGER IF EXISTS trg_gerar_ra ON Aluno;
 
--- CREATE ALUNO - TRIGGER - FUNCTION
+-- Drop da função
+DROP FUNCTION IF EXISTS gerar_ra();
+
+-- Drop da tabela Emprestimo
+DROP TABLE IF EXISTS Emprestimo;
+
+-- Drop da tabela Livro
+DROP TABLE IF EXISTS Livro;
+
+-- Drop da tabela Aluno
+DROP TABLE IF EXISTS Aluno;
+
+-- Drop da sequência
+DROP SEQUENCE IF EXISTS seq_ra;
+*/
+
+-- Habilitar a extensão para geração de UUIDs
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
 CREATE SEQUENCE seq_ra START 1;
 
-CREATE TABLE Aluno (
+CREATE TABLE IF NOT EXISTS Aluno (
     id_aluno SERIAL PRIMARY KEY,
     ra VARCHAR (7) UNIQUE NOT NULL,
     nome VARCHAR (80) NOT NULL,
@@ -14,6 +34,7 @@ CREATE TABLE Aluno (
     celular VARCHAR (20) NOT NULL
 );
 
+-- Criar a função gerar_ra apenas se não existir
 CREATE OR REPLACE FUNCTION gerar_ra() RETURNS TRIGGER AS $$
 BEGIN
     NEW.ra := 'AAA' || TO_CHAR(nextval('seq_ra'), 'FM0000');
@@ -21,12 +42,18 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_gerar_ra
-BEFORE INSERT ON Aluno
-FOR EACH ROW EXECUTE FUNCTION gerar_ra();
+-- Criar a trigger trg_gerar_ra apenas se não existir
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'trg_gerar_ra') THEN
+        CREATE TRIGGER trg_gerar_ra
+        BEFORE INSERT ON Aluno
+        FOR EACH ROW EXECUTE FUNCTION gerar_ra();
+    END IF;
+END $$;
 
 -- CREATE LIVRO
-CREATE TABLE Livro (
+CREATE TABLE IF NOT EXISTS Livro (
     id_livro SERIAL PRIMARY KEY,
     titulo VARCHAR (200) NOT NULL,
     autor VARCHAR (150) NOT NULL,
@@ -40,7 +67,7 @@ CREATE TABLE Livro (
 );
 
 -- CREATE EMPRESTIMO
-CREATE TABLE Emprestimo (
+CREATE TABLE IF NOT EXISTS Emprestimo (
     id_emprestimo SERIAL PRIMARY KEY,
     id_aluno INT REFERENCES Aluno(id_aluno),
     id_livro INT REFERENCES Livro(id_livro),
@@ -48,6 +75,41 @@ CREATE TABLE Emprestimo (
     data_devolucao DATE,
     status_emprestimo VARCHAR (20)
 );
+
+-- CREATE USUARIOS
+CREATE TABLE IF NOT EXISTS Usuario (
+    id_usuario SERIAL PRIMARY KEY,
+    uuid UUID DEFAULT gen_random_uuid() NOT NULL,
+    nome VARCHAR(70) NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(50) UNIQUE NOT NULL,
+    senha VARCHAR(50) NOT NULL
+);
+
+-- Criar a função gerar_senha_padrao apenas se não existir
+CREATE OR REPLACE FUNCTION gerar_senha_padrao()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.senha := NEW.username || '1234';
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Criar a trigger trigger_gerar_senha apenas se não existir
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'trigger_gerar_senha') THEN
+        CREATE TRIGGER trigger_gerar_senha
+        BEFORE INSERT ON Usuario
+        FOR EACH ROW
+        EXECUTE FUNCTION gerar_senha_padrao();
+    END IF;
+END $$;
+
+-- Criar as colunas na tabela Aluno, Emprestimo e Livro, se ainda não existirem
+ALTER TABLE IF EXISTS Aluno ADD COLUMN IF NOT EXISTS status_aluno BOOLEAN DEFAULT TRUE;
+ALTER TABLE IF EXISTS Emprestimo ADD COLUMN IF NOT EXISTS status_emprestimo_registro BOOLEAN DEFAULT TRUE;
+ALTER TABLE IF EXISTS Livro ADD COLUMN IF NOT EXISTS status_livro BOOLEAN DEFAULT TRUE;
 
 -- ALUNO
 INSERT INTO Aluno (nome, sobrenome, data_nascimento, endereco, email, celular) 
@@ -63,13 +125,12 @@ VALUES
 ('Gabriela', 'Guimarães', '2007-08-19', 'Rua Volei, 2028', 'gaby@volei.com', '16983932215'),
 ('Magic', 'Johnson', '2003-07-08', 'Rua NBA, 1999', 'magic@gmail.com', '16993932020');
 
-
 -- LIVRO
 INSERT INTO Livro (titulo, autor, editora, ano_publicacao, isbn, quant_total, quant_disponivel, valor_aquisicao, status_livro_emprestado) 
 VALUES 
 ('O Senhor dos Anéis', 'J.R.R. Tolkien', 'HarperCollins', '1954', '978-0007525546', 10, 10, 150.00, 'Disponível'),
 ('1984', 'George Orwell', 'Companhia das Letras', '1949', '978-8535906770', 8, 8, 90.00, 'Disponível'),
-('Dom Quixote', 'Miguel de Cervantes', 'Penguin Classics', '1605', 'C', 6, 6, 120.00, 'Disponível'),
+('Dom Quixote', 'Miguel de Cervantes', 'Penguin Classics', '1605', '978-0142437230', 6, 6, 120.00, 'Disponível'),
 ('O Pequeno Príncipe', 'Antoine de Saint-Exupéry', 'Agir', '1943', '978-8522008731', 12, 12, 50.00, 'Disponível'),
 ('A Revolução dos Bichos', 'George Orwell', 'Penguin', '1945', '978-0141036137', 7, 7, 80.00, 'Disponível'),
 ('O Hobbit', 'J.R.R. Tolkien', 'HarperCollins', '1937', '978-0007458424', 9, 9, 140.00, 'Disponível'),
@@ -96,64 +157,55 @@ VALUES
 (4, 5, '2024-09-11', '2024-09-25', 'Em andamento'),
 (6, 2, '2024-09-11', '2024-09-25', 'Em andamento');
 
+-- Inserindo usuarios
+INSERT INTO usuario (nome, username, email) 
+VALUES
+('João Silva', 'joao.silva', 'joao.silva@email.com'),
+('Maria Oliveira', 'maria.oliveira', 'maria.oliveira@email.com'),
+('Carlos Souza', 'carlos.souza', 'carlos.souza@email.com');
+
+-- Aluno
 INSERT INTO Aluno (nome, sobrenome, data_nascimento, endereco, email, celular) 
 VALUES 
-('Lionel', 'Messi', '2000-06-24', 'Rua Futebol, 10', 'messi@futebol.com', '11988776655'),
-('Serena', 'Williams', '1999-09-26', 'Rua Tênis, 123', 'serena@tennis.com', '11987654321'),
-('Michael', 'Phelps', '1998-06-30', 'Rua Natação, 456', 'phelps@swim.com', '11985642309'),
-('LeBron', 'James', '2000-12-30', 'Rua NBA, 321', 'lebron@nba.com', '11987876677'),
-('Usain', 'Bolt', '2001-08-21', 'Rua Corrida, 789', 'bolt@corrida.com', '11988997766'),
-('Stephen', 'Curry', ' 2002-03-14', 'Rua NBA, 100', 'curry@nba.com', '11985854545'),
-('Novak', 'Djokovic', '2003-05-22', 'Rua Tênis, 999', 'djokovic@tennis.com', '11989876543'),
-('Simone', 'Biles', '2001-03-14', 'Rua Ginástica, 555', 'biles@gymnastics.com', '11983456789'),
-('Neymar', 'Junior', '2002-02-05', 'Rua Futebol, 200', 'neymar@futebol.com', '11987654322'),
-('Rafael', 'Nadal', '2001-06-03', 'Rua Tênis, 12', 'nadal@tennis.com', '11985673456');
+('Neil', 'Armstrong', '1930-08-05', 'Rua Apollo, 11', 'neil.armstrong@nasa.com', '16988951234'),
+('Ada', 'Lovelace', '1815-12-10', 'Rua Algoritmo, 88', 'ada.lovelace@ti.com', '16990985566'),
+('Tim', 'Berners-Lee', '1955-06-08', 'Rua Web, 1010', 'tim.berners@web.com', '16985993212'),
+('Marie', 'Curie', '1867-11-07', 'Rua Radioatividade, 1900', 'marie.curie@nobel.com', '16983921157'),
+('Albert', 'Einstein', '1879-03-14', 'Rua Relatividade, 1879', 'albert.einstein@nobel.com', '16984995012'),
+('Sally', 'Ride', '1951-05-26', 'Rua Espacial, 77', 'sally.ride@nasa.com', '16985995544'),
+('Linus', 'Torvalds', '1969-12-28', 'Rua Kernel, 99', 'linus.torvalds@linux.com', '16980992234'),
+('Alan', 'Turing', '1912-06-23', 'Rua Máquina, 300', 'alan.turing@enigma.com', '16981994456'),
+('Dorothy', 'Hodgkin', '1910-05-12', 'Rua Cristalografia, 45', 'dorothy.hodgkin@nobel.com', '16983990011'),
+('Elon', 'Musk', '1971-06-28', 'Rua SpaceX, 2021', 'elon.musk@spacex.com', '16985992201');
 
+--livros
 INSERT INTO Livro (titulo, autor, editora, ano_publicacao, isbn, quant_total, quant_disponivel, valor_aquisicao, status_livro_emprestado) 
 VALUES 
-('Crime e Castigo', 'Fiódor Dostoiévski', 'Penguin Classics', '1866', '978-0140449136', 5, 5, 120.00, 'Disponível'),
-('Cem Anos de Solidão', 'Gabriel García Márquez', 'Record', '1967', '978-0307389732', 6, 6, 100.00, 'Disponível'),
-('O Nome da Rosa', 'Umberto Eco', 'Record', '1980', '978-8532511014', 7, 7, 90.00, 'Disponível'),
-('A Divina Comédia', 'Dante Alighieri', 'Ediouro', '1320', '978-8572328474', 4, 4, 130.00, 'Disponível'),
-('Os Miseráveis', 'Victor Hugo', 'Cosac Naify', '1862', '978-8575034852', 3, 3, 110.00, 'Disponível'),
-('Ulisses', 'James Joyce', 'Penguin Classics', '1922', '978-0141182801', 2, 2, 140.00, 'Disponível'),
-('Madame Bovary', 'Gustave Flaubert', 'Penguin Classics', '1857', '978-0140449129', 6, 6, 95.00, 'Disponível'),
-('A Montanha Mágica', 'Thomas Mann', 'Nova Fronteira', '1924', '978-8503002271', 3, 3, 125.00, 'Disponível'),
-('Bíblia Sagrada', 'Sociedade Bíblica do Brasil', 'Sociedade Bíblica do Brasil', '2018', '978-8531114421', 20, 20, 50.00, 'Disponível'),
-('Don Juan', 'Molière', 'Penguin Classics', '1665', '978-0140449044', 5, 5, 105.00, 'Disponível');
+('Clean Code: A Handbook of Agile Software Craftsmanship', 'Robert C. Martin', 'Prentice Hall', 2008, '978-0132350884', 10, 10, 200.00, 'Disponível'),
+('The Pragmatic Programmer: Your Journey to Mastery', 'Andrew Hunt, David Thomas', 'Addison-Wesley', 1999, '978-0201616224', 8, 8, 180.00, 'Disponível'),
+('Design Patterns: Elements of Reusable Object-Oriented Software', 'Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides', 'Addison-Wesley', 1994, '978-0201633610', 6, 6, 150.00, 'Disponível'),
+('Eloquent JavaScript: A Modern Introduction to Programming', 'Marijn Haverbeke', 'No Starch Press', 2018, '978-1593279509', 9, 9, 85.00, 'Disponível'),
+('Learning Web Design: A Beginner’s Guide to HTML, CSS, JavaScript, and Web Graphics', 'Jennifer Niederst Robbins', 'O''''Reilly Media', 2018, '978-1491960202', 7, 7, 95.00, 'Disponível'),
+('HTML and CSS: Design and Build Websites', 'Jon Duckett', 'Wiley', 2011, '978-1118008188', 10, 10, 90.00, 'Disponível'),
+('JavaScript and JQuery: Interactive Front-End Web Development', 'Jon Duckett', 'Wiley', 2014, '978-1118531648', 5, 5, 100.00, 'Disponível'),
+('The Mythical Man-Month: Essays on Software Engineering', 'Frederick P. Brooks Jr.', 'Addison-Wesley', 1975, '978-0201835953', 4, 4, 130.00, 'Disponível'),
+('Introduction to Algorithms', 'Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein', 'MIT Press', 2009, '978-0262033848', 6, 6, 250.00, 'Disponível'),
+('Refactoring: Improving the Design of Existing Code', 'Martin Fowler', 'Addison-Wesley', 1999, '978-0201485677', 5, 5, 170.00, 'Disponível');
 
-INSERT INTO Emprestimo (id_aluno, id_livro, data_emprestimo, data_devolucao, status_emprestimo)
+--Empréstimo 
+INSERT INTO Emprestimo (id_aluno, id_livro, data_emprestimo, data_devolucao, status_emprestimo) 
 VALUES 
-(11,20, '2024-10-01', '2024-10-15', 'Em andamento'),
-(20,12, '2024-10-02', '2024-10-16', 'Em andamento'),
-(14,13, '2024-10-03', '2024-10-17', 'Em andamento'),
-(19, 16, '2024-10-04', '2024-10-18', 'Em andamento'),
-(15, 17, '2024-10-05', '2024-10-19', 'Em andamento'),
-(16, 18, '2024-10-06', '2024-10-20', 'Em andamento'),
-(17, 14, '2024-10-07', '2024-10-21', 'Em andamento'),
-(18, 19, '2024-10-08', '2024-10-22', 'Em andamento'),
-(13, 15, '2024-10-09', '2024-10-23', 'Em andamento'),
-(12, 11, '2024-10-10', '2024-10-24', 'Em andamento');
-
-SELECT * FROM ALUNO;
-SELECT * FROM LIVRO;
-
-SELECT 
-    a.ra, 
-    a.nome, 
-    a.sobrenome, 
-    a.celular, 
-    l.titulo, 
-    l.autor, 
-    l.editora, 
-    e.data_emprestimo, 
-    e.data_devolucao, 
-    e.status_emprestimo
-FROM 
-    Emprestimo e
-JOIN 
-    Aluno a ON e.id_aluno = a.id_aluno
-JOIN 
-    Livro l ON e.id_livro = l.id_livro;
-
-
+(11, 12, '2024-09-01', '2024-09-15', 'Concluído'),
+(13, 14, '2024-09-02', '2024-09-16', 'Concluído'),
+(15, 11, '2024-09-03', '2024-09-17', 'Atrasado'),
+(17, 13, '2024-09-04', '2024-09-18', 'Atrasado'),
+(19, 15, '2024-09-05', '2024-09-19', 'Concluído'),
+(12, 16, '2024-09-06', '2024-09-20', 'Em andamento'),
+(14, 18, '2024-09-07', '2024-09-21', 'Em andamento'),
+(16, 17, '2024-09-08', '2024-09-22', 'Atrasado'),
+(18, 20, '2024-09-09', '2024-09-23', 'Concluído'),
+(20, 19, '2024-09-10', '2024-09-24', 'Em andamento'),
+(11, 18, '2024-09-11', '2024-09-25', 'Concluído'),
+(13, 17, '2024-09-11', '2024-09-25', 'Atrasado'),
+(15, 16, '2024-09-11', '2024-09-25', 'Em andamento'),
+(17, 14, '2024-09-11', '2024-09-25', 'Concluído');
