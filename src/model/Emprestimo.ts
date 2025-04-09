@@ -159,42 +159,48 @@ export class Emprestimo {
 
         try {
             // query de consulta ao banco de dados
-            const querySelectEmprestimos = `SELECT 
-            emprestimo.id_emprestimo,
-            emprestimo.id_aluno,
-            emprestimo.id_livro,
-            emprestimo.data_emprestimo,
-            emprestimo.data_devolucao,
-            emprestimo.status_emprestimo,
-            aluno.nome AS nome_aluno,
-            aluno.sobrenome AS sobrenome_aluno,
-            livro.titulo AS titulo_livro
-        FROM 
-            emprestimo
-        JOIN 
-            aluno ON emprestimo.id_aluno = aluno.id_aluno
-        JOIN 
-            livro ON emprestimo.id_livro = livro.id_livro
-        WHERE status_emprestimo_registro = true;`;
+            const querySelectEmprestimos = `SELECT e.id_emprestimo, e.id_aluno, e.id_livro,
+                       e.data_emprestimo, e.data_devolucao, e.status_emprestimo, e.status_emprestimo_registro,
+                       a.ra, a.nome, a.sobrenome, a.celular, 
+                       l.titulo, l.autor, l.editora
+                FROM Emprestimo e
+                JOIN Aluno a ON e.id_aluno = a.id_aluno
+                JOIN Livro l ON e.id_livro = l.id_livro
+                WHERE e.status_emprestimo_registro = TRUE;`;
 
-            // fazendo a consulta e guardando a resposta
+            // Executa a query no banco de dados
             const respostaBD = await database.query(querySelectEmprestimos);
 
-            // usando a resposta para instanciar objetos do tipo Emprestimo
-            respostaBD.rows.forEach((linha) => {
-                let emprestimo = {
+            // Verifica se há resultados
+            if (respostaBD.rows.length === 0) {
+                return null;
+            }
+
+            // Itera sobre as linhas retornadas
+            respostaBD.rows.forEach((linha: any) => {
+                // Monta o objeto de empréstimo com os dados do aluno e do livro
+                const emprestimo = {
                     idEmprestimo: linha.id_emprestimo,
                     idAluno: linha.id_aluno,
                     idLivro: linha.id_livro,
                     dataEmprestimo: linha.data_emprestimo,
                     dataDevolucao: linha.data_devolucao,
                     statusEmprestimo: linha.status_emprestimo,
-                    nomeAluno: linha.nome_aluno,
-                    sobrenomeAluno: linha.sobrenome_aluno,
-                    tituloLivro: linha.titulo_livro
-                }
-                emprestimo.statusEmprestimo
-                // adiciona o objeto na lista
+                    statusEmprestimoRegistro: linha.status_emprestimo_registro,
+                    aluno: {
+                        ra: linha.ra,
+                        nome: linha.nome,
+                        sobrenome: linha.sobrenome,
+                        celular: linha.celular
+                    },
+                    livro: {
+                        titulo: linha.titulo,
+                        autor: linha.autor,
+                        editora: linha.editora
+                    }
+                };
+
+                // Adiciona o objeto à lista de empréstimos
                 listaDeEmprestimo.push(emprestimo);
             });
 
