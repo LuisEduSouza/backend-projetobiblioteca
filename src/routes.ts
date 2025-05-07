@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 
 // CRUD Aluno
 router.get(SERVER_ROUTES.LISTAR_ALUNOS, AlunoController.todos);
-router.post(SERVER_ROUTES.NOVO_ALUNO, AlunoController.novo);
+router.post(SERVER_ROUTES.NOVO_ALUNO, AlunoController.cadastrar);
 router.put(SERVER_ROUTES.REMOVER_ALUNO, AlunoController.remover);
 router.put(SERVER_ROUTES.ATUALIZAR_ALUNO, AlunoController.atualizar);
 

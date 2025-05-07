@@ -1,7 +1,7 @@
-import { DatabaseModel } from "./DatabaseModel";
+import { DataBaseModel } from "./DatabaseModel";
 
 // Recupera conexão com o banco de dados
-const database = new DatabaseModel().pool;
+const database = new DataBaseModel().pool;
 
 /**
  * Classe que representa um usuário no sistema

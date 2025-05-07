@@ -1,7 +1,7 @@
-import { DatabaseModel } from "./DatabaseModel";
+import { DataBaseModel } from "./DatabaseModel";
 
 // armazenei o pool de conexões
-const database = new DatabaseModel().pool;
+const database = new DataBaseModel().pool;
 
 
 /**

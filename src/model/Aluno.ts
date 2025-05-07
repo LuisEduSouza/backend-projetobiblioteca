@@ -1,343 +1,418 @@
-import { DatabaseModel } from "./DatabaseModel";
+import { DataBaseModel } from "./DatabaseModel";
 
-// armazenei o pool de conexões
-const database = new DatabaseModel().pool;
+// Recupera conexão com o banco de dados
+const database = new DataBaseModel().pool;
 
 /**
- * Classe que representa um aluno.
+ * Classe que representa um aluno no sistema
  */
 export class Aluno {
-
-    /* Atributos */
-    /* Identificador do aluno */
-    private idAluno: number = 0;
-    /* Registro acadêmico do aluno */
-    private ra: string = '';
-    /* Nome do aluno */
-    private nome: string;
-    /* Sobrenome do aluno */
-    private sobrenome: string;
-    /* Data de nascimento do aluno */
-    private dataNascimento: Date;
-    /* Endereço residencial do aluno */
-    private endereco: string;
-    /* E-mail do aluno */
-    private email: string;
-    /* Número de celular do aluno */
-    private celular: string;
-    /* Controla o status do aluno no sistema */
-    private statusAluno: boolean = true;
+    private idAluno: number = 0; // Identificador único do aluno
+    private ra: string = ''; // Registro acadêmico do aluno
+    private nome: string; // Nome do aluno
+    private sobrenome: string; // Sobrenome do aluno
+    private dataNascimento: Date; // Data de nascimento do aluno
+    private endereco: string; // Endereço do aluno
+    private email: string; //E-mail do aluno
+    private celular: string; // Celular do aluno
+    private statusAluno: boolean = true; // Controla o status do aluno no sistema
 
     /**
      * Construtor da classe Aluno
-     * @param nome Nome do aluno
-     * @param sobrenome Sobrenome do aluno
-     * @param dataNascimento Data de nascimento do aluno
-     * @param endereco Endereço residencial do aluno
-     * @param email E-mail do aluno
-     * @param celular Número de celular do aluno
-     * @param statusAluno Status do aluno no sistema
+     * 
+     * @param nome Nome do Aluno
+     * @param Sobrenome Sobrenome do Aluno
+     * @param dataNascimento Data de nascimento do Aluno
+     * @param endereco Endereço do Aluno
+     * @param email Email do Aluno
+     * @param celular Celular do Aluno
      */
-    constructor(
-        nome: string,
-        sobrenome: string,
-        dataNascimento: Date,
-        endereco: string,
-        email: string,
-        celular: string
-    ) {
-        this.nome = nome;
-        this.sobrenome = sobrenome;
-        this.dataNascimento = dataNascimento;
-        this.endereco = endereco;
-        this.email = email;
-        this.celular = celular;
+    public constructor(_nome: string, _sobrenome: string, _dataNascimento: Date, _endereco: string, _email: string, _celular: string) {
+        this.nome = _nome;
+        this.sobrenome = _sobrenome;
+        this.dataNascimento = _dataNascimento;
+        this.endereco = _endereco;
+        this.email = _email;
+        this.celular = _celular;
     }
 
-    /* Métodos get e set */
+    //métodos GETTERS and SETTERS
     /**
-     * Recupera o identificador do aluno.
-     * @returns o identificador do aluno.
+     * Retorna o id do aluno
+     * @returns id: id aluno
      */
     public getIdAluno(): number {
         return this.idAluno;
     }
 
     /**
-     * Define o identificador do aluno.
-     * @param idAluno O novo identificador do aluno.
+     * Atribui o parâmetro ao atributo idAluno
+     * 
+     * @param _idAluno : idAluno
      */
-    public setIdAluno(idAluno: number): void {
-        this.idAluno = idAluno;
+    public setIdAluno(_idAluno: number): void {
+        this.idAluno = _idAluno;
     }
 
+    /*
     /**
-     * Recupera o registro acadêmico do aluno.
-     * @returns o registro acadêmico (RA) do aluno.
+     * Retorna o ra do aluno
+     * @returns ra: ra aluno
      */
-    public getRa(): string {
+    public getRA(): string {
         return this.ra;
     }
 
     /**
-     * Define o registro acadêmico do aluno.
-     * @param ra O novo registro acadêmico do aluno.
+     * Atribui o parâmetro ao atributo ra
+     * 
+     * @param _ra : ra do aluno
      */
-    public setRa(ra: string): void {
-        this.ra = ra;
+    public setRA(_ra: string): void {
+        this.ra = _ra;
     }
 
+
     /**
-     * Recupera o nome do aluno.
-     * @returns o nome do aluno.
+     * Retorna o nome do aluno
+     * @returns nome: nome aluno
      */
-    public getNome(): string {
+    public getNome() {
         return this.nome;
     }
 
     /**
-     * Define o nome do aluno.
-     * @param nome O novo nome do aluno.
+     * Atribui o parâmetro ao atributo nome
+     * 
+     * @param _nome : nome do aluno
      */
-    public setNome(nome: string): void {
-        this.nome = nome;
+    public setNome(_nome: string) {
+        this.nome = _nome;
     }
 
     /**
-     * Recupera o sobrenome do aluno.
-     * @returns o sobrenome do aluno.
+     * Retorna o sobrenome do aluno
+     * @returns sobrenome: sobrenome aluno
      */
-    public getSobrenome(): string {
+    public getSobrenome() {
         return this.sobrenome;
     }
 
     /**
-     * Define o sobrenome do aluno.
-     * @param sobrenome O novo sobrenome do aluno.
+     * Atribui o parâmetro ao atributo sobrenome
+     * 
+     * @param _sobrenome : sobrenome do aluno
      */
-    public setSobrenome(sobrenome: string): void {
-        this.sobrenome = sobrenome;
+    public setSobrenome(_sobrenome: string) {
+        this.sobrenome = _sobrenome;
     }
 
     /**
-     * Recupera a data de nascimento do aluno.
-     * @returns a data de nascimento do aluno.
+     * Retorna a dataNascimento do aluno
+     * @returns datanascimento: dataNascimento aluno
      */
-    public getDataNascimento(): Date {
+    public getDataNascimento() {
         return this.dataNascimento;
     }
 
     /**
-     * Define a data de nascimento do aluno.
-     * @param dataNascimento A nova data de nascimento do aluno.
+     * Atribui o parâmetro ao atributo dataNascimento
+     * 
+     * @param _dataNascimento : dataNascimento do aluno
      */
-    public setDataNascimento(dataNascimento: Date): void {
-        this.dataNascimento = dataNascimento;
+    public setDataNascimento(_dataNascimento: Date) {
+        this.dataNascimento = _dataNascimento;
     }
 
     /**
-     * Recupera o endereço residencial do aluno.
-     * @returns o endereço do aluno.
-     */
-    public getEndereco(): string {
+    * Retorna o endereço do aluno
+    * @returns endereco: endereco aluno
+    */
+    public getEndereco() {
         return this.endereco;
     }
 
     /**
-     * Define o endereço residencial do aluno.
-     * @param endereco O novo endereço do aluno.
+     * Atribui o parâmetro ao atributo endereco
+     * 
+     * @param _endereco : endereco do aluno
      */
-    public setEndereco(endereco: string): void {
-        this.endereco = endereco;
+    public setEndereco(_endereco: string) {
+        this.endereco = _endereco;
     }
 
     /**
-     * Recupera o e-mail do aluno.
-     * @returns o e-mail do aluno.
+     * Retorna o email do aluno
+     * @returns email: email aluno
      */
-    public getEmail(): string {
+    public getEmail() {
         return this.email;
     }
 
     /**
-     * Define o e-mail do aluno.
-     * @param email O novo e-mail do aluno.
+     * Retorna o celular do aluno
+     * @returns celular: celular aluno
      */
-    public setEmail(email: string): void {
-        this.email = email;
-    }
-
-    /**
-     * Recupera o número de celular do aluno.
-     * @returns o número de celular do aluno.
-     */
-    public getCelular(): string {
+    public getCelular() {
         return this.celular;
     }
 
     /**
-     * Define o número de celular do aluno.
-     * @param celular O novo número de celular do aluno.
+     * Atribui o parâmetro ao atributo celular
+     * 
+     * @param _celular : celular do aluno
      */
-    public setCelular(celular: string): void {
-        this.celular = celular;
+    public setCelular(_celular: string) {
+        this.celular = _celular;
     }
 
     /**
-    * Retorna o status do aluno
-    * @returns status: status aluno
-    */
-    public getStatusAluno() {
+     * Retorna o status do aluno no sistema
+     * 
+     * @return Status do aluno no sistema
+     */
+    public getStatusAluno(): boolean {
         return this.statusAluno;
     }
 
     /**
-     * Atribui um valor ao atributo status do aluno
+     * Atribui um valor ao status do aluno
      * 
-     * @param _statusAluno : status do aluno
+     * @param _statusAluno : Valor a ser atribuido ao status do aluno
      */
     public setStatusAluno(_statusAluno: boolean) {
         this.statusAluno = _statusAluno;
     }
 
+    static validacaoObjeto(aluno: Aluno): boolean {
+        return !!(aluno && aluno.getNome() && aluno.getSobrenome() && aluno.getEmail() && aluno.getCelular());
+    }    
+
+    // MÉTODO PARA ACESSAR O BANCO DE DADOS
+    // CRUD Create - READ - Update - Delete
+
     /**
-     * Busca e retorna uma lista de alunos do banco de dados.
-     * @returns Um array de objetos do tipo `Aluno` em caso de sucesso ou `null` se ocorrer um erro durante a consulta.
+     * Retorna uma lista com todos os alunos cadastrados no banco de dados
      * 
-     * - A função realiza uma consulta SQL para obter todas as informações da tabela "aluno".
-     * - Os dados retornados do banco de dados são usados para instanciar objetos da classe `Aluno`.
-     * - Cada aluno é adicionado a uma lista que será retornada ao final da execução.
-     * - Se houver falha na consulta ao banco, a função captura o erro, exibe uma mensagem no console e retorna `null`.
+     * @returns Lista com todos os alunos cadastrados no banco de dados
      */
-    static async listagemAlunos(): Promise<Array<Aluno> | null> {
-        const listaDeAlunos: Array<Aluno> = [];
+    static async listarAlunos(): Promise<Array<Aluno> | null> {
+        // Criando lista vazia para armazenar os alunos
+        let listaDeAlunos: Array<Aluno> = [];
+
         try {
-            const querySelectAlunos = `SELECT * FROM aluno WHERE status_aluno = TRUE;`;
-            const respostaBD = await database.query(querySelectAlunos);
-            respostaBD.rows.forEach((linha) => {
-                const novoAluno = new Aluno(
-                    linha.nome,
-                    linha.sobrenome,
-                    linha.data_nascimento,
-                    linha.endereco,
-                    linha.email,
-                    linha.celular
+            // Query para consulta no banco de dados
+            const querySelectAluno = `SELECT * FROM Aluno WHERE status_aluno = TRUE;`;
+
+            // executa a query no banco de dados
+            const respostaBD = await database.query(querySelectAluno);
+
+            // percorre cada resultado retornado pelo banco de dados
+            // aluno é o apelido que demos para cada linha retornada do banco de dados
+            respostaBD.rows.forEach((aluno: any) => {
+
+                // criando objeto aluno
+                let novoAluno = new Aluno(
+                    aluno.nome,
+                    aluno.sobrenome,
+                    aluno.data_nascimento,
+                    aluno.endereco,
+                    aluno.email,
+                    aluno.celular
                 );
-                novoAluno.setIdAluno(linha.id_aluno);
-                novoAluno.setRa(linha.ra);
-                novoAluno.setStatusAluno(linha.status_aluno);
+                // adicionando o ID ao objeto
+                novoAluno.setIdAluno(aluno.id_aluno);
+                novoAluno.setRA(aluno.ra);
+                novoAluno.setStatusAluno(aluno.status_aluno);
+
+                // adicionando a pessoa na lista
                 listaDeAlunos.push(novoAluno);
             });
+
+            // retornado a lista de pessoas para quem chamou a função
             return listaDeAlunos;
         } catch (error) {
-            console.log('Erro ao buscar lista de alunos');
+            // exibe detalhes do erro no console
+            console.log(`Erro ao acessar o modelo: ${error}`);
+            // retorna nulo
             return null;
         }
     }
 
     /**
-     * Realiza o cadastro de um aluno no banco de dados.
+     * Retorna as informações de um aluno informado pelo ID
      * 
-     * Esta função recebe um objeto do tipo `Aluno` e insere seus dados (nome, sobrenome, data de nascimento,
-     * endereço, email e celular) na tabela `Aluno` do banco de dados. O método retorna um valor booleano
-     * indicando se o cadastro foi realizado com sucesso.
-     * 
-     * @param {Aluno} aluno - Objeto contendo os dados do aluno que será cadastrado. O objeto `Aluno`
-     *                        deve conter os métodos `getNome()`, `getSobrenome()`, `getDataNascimento()`,
-     *                        `getEndereco()`, `getEmail()` e `getCelular()` que retornam os respectivos
-     *                        valores do aluno.
-     * @returns {Promise<boolean>} - Retorna `true` se o aluno foi cadastrado com sucesso e `false` caso contrário.
-     *                               Em caso de erro durante o processo, a função trata o erro e retorna `false`.
-     * 
-     * @throws {Error} - Se ocorrer algum erro durante a execução do cadastro, uma mensagem de erro é exibida
-     *                   no console junto com os detalhes do erro.
+     * @param idAluno Identificador único do aluno
+     * @returns Objeto com informações do aluno
      */
-    static async cadastroAluno(aluno: Aluno): Promise<boolean> {
+    static async listarAluno(idAluno: number): Promise<Aluno | null> {
         try {
-            const queryInsertAluno = `INSERT INTO Aluno (nome, sobrenome, data_nascimento, endereco, email, celular) 
-                                        VALUES 
-                                    ('${aluno.getNome()}', 
-                                    '${aluno.getSobrenome()}', 
-                                    '${aluno.getDataNascimento()}', 
-                                    '${aluno.getEndereco()}', 
-                                    '${aluno.getEmail()}', 
-                                    '${aluno.getCelular()}')
-                                    RETURNING id_aluno;`;
-            const respostaBD = await database.query(queryInsertAluno);
-            if (respostaBD.rowCount != 0) {
-                console.log(`Aluno cadastrado com sucesso! ID do aluno: ${respostaBD.rows[0].id_aluno}`);
+            // Bloco try: aqui tentamos executar o código que pode gerar um erro.
+            // Se ocorrer algum erro dentro deste bloco, ele será capturado pelo catch.
+
+            // Define a query SQL para selecionar um aluno com base no ID fornecido
+            const querySelectAluno = `SELECT * FROM aluno WHERE id_aluno = ${idAluno}`;
+
+            // Executa a consulta no banco de dados e aguarda o resultado
+            const respostaBD = await database.query(querySelectAluno);
+
+            // Cria um novo objeto da classe Aluno com os dados retornados do banco
+            let aluno = new Aluno(
+                respostaBD.rows[0].nome,             // Nome do aluno
+                respostaBD.rows[0].sobrenome,        // Sobrenome do aluno
+                respostaBD.rows[0].data_nascimento,  // Data de nascimento do aluno
+                respostaBD.rows[0].endereco,         // Endereço do aluno
+                respostaBD.rows[0].email,            // E-mail do aluno
+                respostaBD.rows[0].celular           // Celular do aluno
+            );
+
+            // Define o ID do aluno no objeto Aluno
+            aluno.setIdAluno(respostaBD.rows[0].id_aluno);
+
+            // Define o RA (Registro Acadêmico) do aluno
+            aluno.setRA(respostaBD.rows[0].ra);
+
+            // Define o status do aluno (ativo, inativo, etc.)
+            aluno.setStatusAluno(respostaBD.rows[0].status_aluno);
+
+            // Retorna o objeto aluno preenchido com os dados do banco
+            return aluno;
+        } catch (error) {
+            // Bloco catch: se algum erro ocorrer no bloco try, ele será capturado aqui.
+            // Isso evita que o erro interrompa a execução do programa.
+
+            // Exibe uma mensagem de erro no console para facilitar o debug
+            console.log(`Erro ao realizar a consulta: ${error}`);
+
+            // Retorna null para indicar que não foi possível buscar o aluno
+            return null;
+        }
+    }
+
+    /**
+     * Cadastra um novo aluno no banco de dados
+     * @param aluno Objeto Aluno contendo as informações a serem cadastradas
+     * @returns Boolean indicando se o cadastro foi bem-sucedido
+     */
+    static async cadastrarAluno(aluno: Aluno): Promise<boolean> {
+        try {
+            // Cria a consulta (query) para inserir o registro de um aluno no banco de dados, retorna o ID do aluno que foi criado no final
+            const queryInsertAluno = `INSERT INTO Aluno (nome, sobrenome, data_nascimento, endereco, email, celular)
+                                            VALUES (
+                                                '${aluno.getNome().toUpperCase()}',
+                                                '${aluno.getSobrenome().toUpperCase()}',
+                                                '${aluno.getDataNascimento()}',
+                                                '${aluno.getEndereco().toUpperCase()}',
+                                                '${aluno.getEmail().toLowerCase()}',
+                                                '${aluno.getCelular()}'
+                                            )
+                                            RETURNING id_aluno;`;
+
+            // Executa a query no banco de dados e armazena o resultado
+            const result = await database.query(queryInsertAluno);
+
+            // verifica se a quantidade de linhas que foram alteradas é maior que 0
+            if (result.rows.length > 0) {
+                // Exibe a mensagem de sucesso
+                console.log(`Aluno cadastrado com sucesso. ID: ${result.rows[0].id_aluno}`);
+                // retorna verdadeiro
                 return true;
             }
+
+            // caso a consulta não tenha tido sucesso, retorna falso
             return false;
+            // captura erro
         } catch (error) {
-            console.log('Erro ao cadastrar o aluno. Verifique os logs para mais detalhes.');
-            console.log(error);
+            // Exibe mensagem com detalhes do erro no console
+            console.error(`Erro ao cadastrar aluno: ${error}`);
+            // retorna falso
             return false;
         }
     }
 
-    static async removerAluno(id_aluno: number): Promise<Boolean> {
+    /**
+     * Remove um aluno do banco de dados
+     * @param idAluno ID do aluno a ser removido
+     * @returns Boolean indicando se a remoção foi bem-sucedida
+    */
+    static async removerAluno(idAluno: number): Promise<number> {
         // variável para controle de resultado da consulta (query)
-        let queryResult = false;
-
         try {
-            // Cria a consulta (query) para remover o aluno
-            const queryDeleteEmprestimoAluno = `UPDATE emprestimo SET status_emprestimo_registro = FALSE WHERE id_aluno=${id_aluno}`;
+            // recupera o objeto do aluno a ser deletado
+            const aluno = await this.listarAluno(idAluno);
 
-            // remove os emprestimos associado ao aluno
-            await database.query(queryDeleteEmprestimoAluno);
+            // verifica se o objeto é válido e depois se o status_aluno é TRUE
+            if (aluno && aluno.getStatusAluno()) {
+                // Cria a consulta (query) para remover o aluno
+                const queryDeleteEmprestimoAluno = `UPDATE emprestimo 
+                                                        SET status_emprestimo_registro = FALSE
+                                                        WHERE id_aluno=${idAluno};`;
 
-            // Construção da query SQL para deletar o Aluno.
-            const queryDeleteAluno = `UPDATE Aluno SET status_aluno = FALSE WHERE id_aluno=${id_aluno};`;
+                // remove os emprestimos associado ao aluno
+                await database.query(queryDeleteEmprestimoAluno);
 
-            // Executa a query de exclusão e verifica se a operação foi bem-sucedida.
-            await database.query(queryDeleteAluno)
-                .then((result) => {
-                    if (result.rowCount != 0) {
-                        queryResult = true; // Se a operação foi bem-sucedida, define queryResult como true.
-                    }
-                });
+                // Construção da query SQL para deletar o Aluno.
+                const queryDeleteAluno = `UPDATE aluno 
+                                            SET status_aluno = FALSE
+                                            WHERE id_aluno=${idAluno};`;
 
+                // Executa a query de exclusão e verifica se a operação foi bem-sucedida.
+                await database.query(queryDeleteAluno)
+                    .then((result) => {
+                        if (result.rowCount != 0) {
+                            return 1; // Se a operação foi bem-sucedida, define queryResult como true.
+                        }
+                    });
+            }
             // retorna o resultado da query
-            return queryResult;
+            return 9;
 
-            // captura qualquer erro que aconteça
+        // captura qualquer erro que aconteça
         } catch (error) {
             // Em caso de erro na consulta, exibe o erro no console e retorna false.
             console.log(`Erro na consulta: ${error}`);
             // retorna false
-            return queryResult;
+            return 0;
         }
     }
 
 
-    static async atualizarAluno(aluno: Aluno): Promise<boolean> {
+    /**
+    * Atualiza os dados de um aluno no banco de dados.
+    * @param aluno Objeto do tipo Aluno com os novos dados
+    * @returns true caso sucesso, false caso erro
+    */
+    static async atualizarAluno(aluno: Aluno): Promise<number> {
         try {
-            // query para fazer update no banco de dados
-            const queryUpdateAluno = `UPDATE aluno SET 
-                                    nome = '${aluno.getNome()}',
-                                    sobrenome = '${aluno.getSobrenome()}',
-                                    data_nascimento = '${aluno.getDataNascimento()}',
-                                    endereco = '${aluno.getEndereco()}',
-                                    email = '${aluno.getEmail()}',
-                                    celular = '${aluno.getCelular()}'
-                                    WHERE id_aluno = ${aluno.getIdAluno()};`;
+            // recupera o objeto do aluno a ser deletado
+            const alunoConsulta = await this.listarAluno(aluno.idAluno);
 
-            // executa a query no banco de dados
-            const respostaBD = await database.query(queryUpdateAluno);
+            if (alunoConsulta && alunoConsulta.getStatusAluno()) {
+                // Construção da query SQL para atualizar os dados do aluno no banco de dados.
+                const queryAtualizarAluno = `UPDATE Aluno SET 
+                                                nome = '${aluno.getNome().toUpperCase()}', 
+                                                sobrenome = '${aluno.getSobrenome().toUpperCase()}',
+                                                data_nascimento = '${aluno.getDataNascimento()}', 
+                                                endereco = '${aluno.getEndereco().toUpperCase()}',
+                                                celular = '${aluno.getCelular()}', 
+                                                email = '${aluno.getEmail().toLowerCase()}'                                            
+                                                WHERE id_aluno = ${aluno.idAluno}`;
 
-            // verifica se a quantidade de linhas modificadas é diferente de 0
-            if (respostaBD.rowCount != 0) {
-                console.log(`Aluno atualizado com sucesso! ID do aluno: ${aluno.getIdAluno()}`);
-                // true significa que a atualização foi realizada
-                return true;
+                // Executa a query de atualização e verifica se a operação foi bem-sucedida.
+                await database.query(queryAtualizarAluno)
+                    .then((result) => {
+                        if (result.rowCount != 0) {
+                            return 1; // Se a operação foi bem-sucedida, define queryResult como true.
+                        }
+                    });
             }
-            // false significa que a atualização NÃO foi realizada
-            return false;
+
+            // Retorna o resultado da operação para quem chamou a função.
+            return 9;
         } catch (error) {
-            console.log('Erro ao atualizar o aluno. Verifique os logs para mais detalhes.');
-            console.log(error);
-            return false;
+            // Em caso de erro na consulta, exibe o erro no console e retorna false.
+            console.log(`Erro na consulta: ${error}`);
+            return 0;
         }
     }
 }
