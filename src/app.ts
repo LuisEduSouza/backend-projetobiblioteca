@@ -1,5 +1,5 @@
 import { server } from "./server";
-import { DataBaseModel } from "./model/DatabaseModel";
+import { DataBaseModel } from "./model/DataBaseModel";
 import dotenv from 'dotenv';
 
 dotenv.config();

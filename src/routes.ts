@@ -3,6 +3,8 @@ import { SERVER_ROUTES } from "./appConfig";
 import AlunoController from "./controller/AlunoController";
 import LivroController  from "./controller/LivroController";
 import EmprestimoController  from "./controller/EmprestimoController";
+import upload from "./config/multerConfig";
+import UsuarioController from "./controller/UsuarioController";
 
 const router = express.Router();
 
@@ -27,5 +29,10 @@ router.get(SERVER_ROUTES.LISTAR_EMPRESTIMOS, EmprestimoController.todos);
 router.post(SERVER_ROUTES.NOVO_EMPRESTIMO, EmprestimoController.novo);
 router.put(SERVER_ROUTES.ATUALIZAR_EMPRESTIMO, EmprestimoController.atualizar);
 router.put(SERVER_ROUTES.REMOVER_EMPRESTIMOS, EmprestimoController.remover);
+
+router.get(SERVER_ROUTES.LISTAR_USUARIO, UsuarioController.todos);
+
+// Cadastro de Usuário com Upload de Imagem de Perfil
+router.post(SERVER_ROUTES.NOVO_USUARIO, upload.single('imagemPerfil'), UsuarioController.cadastrar);
 
 export { router }

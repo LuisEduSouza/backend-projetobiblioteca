@@ -1,4 +1,4 @@
-import { DataBaseModel } from "./DatabaseModel";
+import { DataBaseModel } from "./DataBaseModel";
 
 // Recupera conexão com o banco de dados
 const database = new DataBaseModel().pool;
