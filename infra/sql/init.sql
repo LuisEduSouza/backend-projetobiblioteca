@@ -63,7 +63,9 @@ CREATE TABLE IF NOT EXISTS Livro (
     quant_total INTEGER NOT NULL,
     quant_disponivel INTEGER NOT NULL,
     valor_aquisicao DECIMAL (10,2),
-    status_livro_emprestado VARCHAR (20)
+    status_livro_emprestado VARCHAR (20),
+    uuid UUID DEFAULT gen_random_uuid() NOT NULL,
+    capa VARCHAR(200)
 );
 
 -- CREATE EMPRESTIMO

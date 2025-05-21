@@ -1,393 +1,389 @@
 import { DataBaseModel } from "./DataBaseModel";
 
-// armazenei o pool de conexões
+// Recupera conexão com o banco de dados
 const database = new DataBaseModel().pool;
 
 /**
- * Classe que representa um livro.
+ * Classe que representa um livro no sistema
  */
 export class Livro {
-
-    /* Atributos */
-    /* Identificador do livro */
-    private idLivro: number = 0;
-    /* Título do livro */
-    private titulo: string;
-    /* Autor do livro */
-    private autor: string;
-    /* Editora do livro */
-    private editora: string;
-    /* Ano de publicação do livro */
-    private anoPublicacao: Date;
-    /* Código ISBN do livro */
-    private isbn: string;
-    /* Quantidade total de exemplares do livro */
-    private quantTotal: number;
-    /* Quantidade de exemplares disponíveis */
-    private quantDisponivel: number;
-    /* Valor de aquisição do livro */
-    private valorAquisicao: number;
-    /* Status de empréstimo do livro */
-    private statusLivroEmprestado: string;
-    /* Controla o status do livro no sistema */
-    private statusLivro: boolean = true;
-
+    static atualizarLivro(livroAtualizado: Livro) {
+        throw new Error("Method not implemented.");
+    }
+    private idLivro: number = 0; // Identificador único do livro
+    private titulo: string; // Título do livro
+    private autor: string; // Autor do livro
+    private editora: string; // Editora do livro
+    private anoPublicacao: string; // Ano de publicação do livro
+    private isbn: string; // ISBN do livro
+    private quantTotal: number; // Quantidade total daquele exemplar
+    private quantDisponivel: number; // Quantidade disponível daquele exemplar
+    private valorAquisicao: number; // Valor da arquisição do livro
+    private statusLivroEmprestado: string; // Status do livro emprestado
+    private statusLivro: boolean = true; // Status do livro no sistema
+    private capa: string = '';
 
     /**
-     * Construtor da classe Livro
-     * 
-     * @param titulo Título do livro
-     * @param autor Autor do livro
-     * @param editora Editora do livro
-     * @param anoPublicacao Ano de publicação do livro
-     * @param isbn Código ISBN do livro
-     * @param quantTotal Quantidade total de exemplares
-     * @param quantDisponivel Quantidade de exemplares disponíveis
-     * @param valorAquisicao Valor de aquisição do livro
-     * @param statusLivroEmprestado Status de empréstimo do livro
-     */
-    constructor(
-        titulo: string,
-        autor: string,
-        editora: string,
-        anoPublicacao: Date,
-        isbn: string,
-        quantTotal: number,
-        quantDisponivel: number,
-        valorAquisicao: number,
-        statusLivroEmprestado: string,
-    ) {
-        this.titulo = titulo;
-        this.autor = autor;
-        this.editora = editora;
-        this.anoPublicacao = anoPublicacao;
-        this.isbn = isbn;
-        this.quantTotal = quantTotal;
-        this.quantDisponivel = quantDisponivel;
-        this.valorAquisicao = valorAquisicao;
-        this.statusLivroEmprestado = statusLivroEmprestado;
+    * Construtor da classe Livro
+    * 
+    * @param titulo Título do Livro
+    * @param autor Autor do Livro
+    * @param editora Editora do Livro
+    * @param anoPublicacao Ano de publicação do Livro
+    * @param isbn ISBN do Livro
+    * @param quantTotal Quantidade total de exemplares do Livro
+    * @param quantDisponivel Quantidade disponível de exemplares do Livro
+    * @param valorAquisicao Valor de aquisição do Livro
+    * @param statusLivroEmprestado Status de empréstimo do Livro
+    */
+    public constructor(_titulo: string, _autor: string, _editora: string, _anoPublicacao: string,
+        _isbn: string, _quantTotal: number, _quantDisponivel: number, _valorAquisicao: number, _statusLivroEmprestimo: string) {
+
+        this.titulo = _titulo;
+        this.autor = _autor;
+        this.editora = _editora;
+        this.anoPublicacao = _anoPublicacao;
+        this.isbn = _isbn;
+        this.quantTotal = _quantTotal;
+        this.quantDisponivel = _quantDisponivel;
+        this.valorAquisicao = _valorAquisicao;
+        this.statusLivroEmprestado = _statusLivroEmprestimo;
     }
 
-    /* Métodos get e set */
+    //métodos GETTERS and SETTERS
     /**
-     * Recupera o identificador do livro
-     * @returns o identificador do livro
+     * Retorna o id do livro
+     * @returns id: idLivro
      */
     public getIdLivro(): number {
         return this.idLivro;
     }
 
     /**
-     * Define o identificador do livro
-     * @param idLivro novo identificador do livro
+     * Atribui o parâmetro ao atributo idAluno
+     * 
+     * @param _idLivro : idLivro
      */
-    public setIdLivro(idLivro: number): void {
-        this.idLivro = idLivro;
+    public setIdLivro(_idLivro: number): void {
+        this.idLivro = _idLivro;
     }
 
     /**
-     * Retorna o título do livro.
-     *
-     * @returns {string} O título do livro.
-     */
+    * Retorna o titulo do livro
+    * @returns titulo: _titulo
+    */
     public getTitulo(): string {
         return this.titulo;
     }
 
     /**
-     * Define o título do livro.
+     * Atribui o parâmetro ao atributo titulo
      * 
-     * @param titulo O título do livro a ser definido.
+     * @param _titulo : titulo
      */
-    public setTitulo(titulo: string): void {
-        this.titulo = titulo;
+    public setTitulo(_titulo: string): void {
+        this.titulo = _titulo;
     }
 
     /**
-     * Retorna o autor do livro.
-     *
-     * @returns {string} O autor do livro.
-     */
+    * Retorna o autor do livro
+    * @returns autor: _autor
+    */
     public getAutor(): string {
         return this.autor;
     }
 
     /**
-     * Define o autor do livro.
+     * Atribui o parâmetro ao atributo autor
      * 
-     * @param autor O autor do livro a ser definido.
+     * @param _autor : autor
      */
-    public setAutor(autor: string): void {
-        this.autor = autor;
+    public setAutor(_autor: string): void {
+        this.autor = _autor;
     }
 
     /**
-     * Retorna a editora do livro.
-     *
-     * @returns {string} A editora do livro.
-     */
+    * Retorna a editora do livro
+    * @returns editora: _editora
+    */
     public getEditora(): string {
         return this.editora;
     }
 
     /**
-     * Define a editora do livro.
+     * Atribui o parâmetro ao atributo editora
      * 
-     * @param editora A editora do livro a ser definida.
+     * @param _editora : editora
      */
-    public setEditora(editora: string): void {
-        this.editora = editora;
+    public setEditora(_editora: string): void {
+        this.editora = _editora;
     }
 
     /**
-     * Retorna o ano de publicação do livro.
-     *
-     * @returns {Date} O ano de publicação do livro.
-     */
-    public getAnoPublicacao(): Date {
+    * Retorna o ano de publicação do livro
+    * @returns anoPublicacao: _anoPublicacao
+    */
+    public getAnoPublicacao(): string {
         return this.anoPublicacao;
     }
 
     /**
-     * Define o ano de publicação do livro.
+     * Atribui o parâmetro ao ano de publicação titulo
      * 
-     * @param anoPublicacao O ano de publicação a ser definido.
+     * @param _anoPublicacao : anoPublicacao
      */
-    public setAnoPublicacao(anoPublicacao: Date): void {
-        this.anoPublicacao = anoPublicacao;
+    public setAnoPublicacao(_anoPublicacao: string): void {
+        this.anoPublicacao = _anoPublicacao;
     }
 
     /**
-     * Retorna o código ISBN do livro.
-     *
-     * @returns {string} O código ISBN do livro.
+     * Retorna o ISBN do livro
+     * @returns isbn: _isbn
      */
-    public getIsbn(): string {
+    public getISBN(): string {
         return this.isbn;
     }
 
     /**
-     * Define o código ISBN do livro.
+     * Atribui o parâmetro ao atributo ISBN
      * 
-     * @param isbn O código ISBN a ser definido.
+     * @param _isbn : isbn
      */
-    public setIsbn(isbn: string): void {
-        this.isbn = isbn;
+    public setISBN(_isbn: string): void {
+        this.isbn = _isbn;
     }
 
     /**
-     * Retorna a quantidade total de exemplares do livro.
-     *
-     * @returns {number} A quantidade total de exemplares.
-     */
+    * Retorna a quantidade total de livro
+    * @returns quantidade total: quantTotal
+    */
     public getQuantTotal(): number {
         return this.quantTotal;
     }
 
     /**
-     * Define a quantidade total de exemplares do livro.
+     * Atribui o parâmetro ao atributo quantidade total
      * 
-     * @param quantTotal A quantidade total a ser definida.
+     * @param _quantTotal : quantTotal
      */
-    public setQuantTotal(quantTotal: number): void {
-        this.quantTotal = quantTotal;
+    public setQuantTotal(_quantTotal: number): void {
+        this.quantTotal = _quantTotal;
     }
 
     /**
-     * Retorna a quantidade de exemplares disponíveis do livro.
-     *
-     * @returns {number} A quantidade de exemplares disponíveis.
-     */
+    * Retorna a quantidade disponivel de livro
+    * @returns quantidade disponivel: quantDisponivel
+    */
     public getQuantDisponivel(): number {
         return this.quantDisponivel;
     }
 
     /**
-     * Define a quantidade de exemplares disponíveis do livro.
+     * Atribui o parâmetro ao atributo quantidade disponível
      * 
-     * @param quantDisponivel A quantidade disponível a ser definida.
+     * @param _quantDisponivel : quantDisponivel
      */
-    public setQuantidadeDisponivel(quantDisponivel: number): void {
-        this.quantDisponivel = quantDisponivel;
+    public setQuantDisponivel(_quantDisponivel: number): void {
+        this.quantDisponivel = _quantDisponivel;
     }
 
     /**
-     * Retorna o valor de aquisição do livro.
-     *
-     * @returns {number} O valor de aquisição do livro.
-     */
+    * Retorna a quantidade total de livro
+    * @returns quantidade total: quantTotal
+    */
     public getValorAquisicao(): number {
         return this.valorAquisicao;
     }
 
     /**
-     * Define o valor de aquisição do livro.
+     * Atribui o parâmetro ao atributo valor aquisição
      * 
-     * @param valorAquisicao O valor de aquisição a ser definido.
+     * @param _valorAquisicao : valorAquisicao
      */
-    public setValorAquisicao(valorAquisicao: number): void {
-        this.valorAquisicao = valorAquisicao;
+    public setValorAquisicao(_valorAquisicao: number): void {
+        this.valorAquisicao = _valorAquisicao;
     }
 
     /**
-     * Retorna o status de empréstimo do livro.
-     *
-     * @returns {string} O status de empréstimo do livro.
-     */
+    * Retorna o status do livro
+    * @returns status do livro : statusLivroEmprestado
+    */
     public getStatusLivroEmprestado(): string {
         return this.statusLivroEmprestado;
     }
 
     /**
-     * Define o status de empréstimo do livro.
+     * Atribui o parâmetro ao atributo status livro emprestado
      * 
-     * @param statusLivroEmprestado O status de empréstimo a ser definido.
+     * @param _statusLivroEmprestado : statusLivroEmprestado
      */
-    public setStatusLivroEmprestado(statusLivroEmprestado: string): void {
-        this.statusLivroEmprestado = statusLivroEmprestado;
+    public setStatusLivroEmprestado(_statusLivroEmprestado: string): void {
+        this.statusLivroEmprestado = _statusLivroEmprestado;
     }
 
     /**
-    * Retorna o status do livro
-    * @returns status: status livro
-    */
-    public getStatusLivro() {
+     * Retorna o status do livro no sistema
+     * 
+     * @returns Status do livro no sistema
+     */
+    public getStatusLivro(): boolean {
         return this.statusLivro;
     }
 
     /**
-     * Atribui um valor ao atributo status do livro
+     * Atribui o parâmetro ao atributo status livro
      * 
-     * @param _statusAluno : status do aluno
+     * @param _statusLivro : Status do livro no sistema
      */
     public setStatusLivro(_statusLivro: boolean) {
         this.statusLivro = _statusLivro;
     }
 
+    /**
+     * Retorna o nome do arquivo da capa do livro
+     * @returns capa: string
+     */
+    public getCapa(): string {
+        return this.capa;
+    }
 
     /**
-     * Busca e retorna uma lista de livros do banco de dados.
-     * @returns Um array de objetos do tipo `Livro` em caso de sucesso ou `null` se ocorrer um erro durante a consulta.
-     * 
-     * - A função realiza uma consulta SQL para obter todas as informações da tabela "livro".
-     * - Os dados retornados do banco de dados são usados para instanciar objetos da classe `Livro`.
-     * - Cada livro é adicionado a uma lista que será retornada ao final da execução.
-     * - Se houver falha na consulta ao banco, a função captura o erro, exibe uma mensagem no console e retorna `null`.
+     * Atribui o parâmetro ao atributo capa
+     * @param _capa : string
      */
-    static async listagemLivro(): Promise<Array<Livro> | null> {
-        // objeto para armazenar a lista de livros
-        const listaDeLivro: Array<Livro> = [];
+    public setCapa(_capa: string): void {
+        this.capa = _capa;
+    }
+
+    // MÉTODO PARA ACESSAR O BANCO DE DADOS
+    // CRUD Create - READ - Update - Delete
+
+    /**
+     * Retorna uma lista com todos os livros cadastrados no banco de dados
+     * 
+     * @returns Lista com todos os livros cadastrados no banco de dados
+     */
+    static async listarLivros(): Promise<Array<Livro> | null> {
+        // Criando lista vazia para armazenar os livros
+        let listaDeLivros: Array<Livro> = [];
 
         try {
-            // query de consulta ao banco de dados
-            const querySelectLivro = `SELECT * FROM livro WHERE status_livro = TRUE;`;
+            // Query para consulta no banco de dados
+            const querySelectLivro = `SELECT * FROM Livro WHERE status_livro = TRUE;`;
 
-            // fazendo a consulta e guardando a resposta
+            // executa a query no banco de dados
             const respostaBD = await database.query(querySelectLivro);
 
-            // usando a resposta para instanciar objetos do tipo Livro
-            respostaBD.rows.forEach((linha) => {
-                // instancia (cria) objeto Livro
-                const novoLivro = new Livro(
-                    linha.titulo,
-                    linha.autor,
-                    linha.editora,
-                    linha.ano_publicacao,
-                    linha.isbn,
-                    linha.quant_total,
-                    linha.quant_disponivel,
-                    linha.valor_aquisicao,
-                    linha.status_livro_emprestado
+            // percorre cada resultado retornado pelo banco de dados
+            // livro é o apelido que demos para cada linha retornada do banco de dados
+            respostaBD.rows.forEach((livro) => {
+                // criando objeto livro
+                let novoLivro = new Livro(
+                    livro.titulo,
+                    livro.autor,
+                    livro.editora,
+                    livro.ano_publicacao,
+                    livro.isbn,
+                    livro.quant_total,
+                    livro.quant_disponivel,
+                    livro.valor_aquisicao,
+                    livro.status_livro_emprestado
                 );
+                // adicionando o ID ao objeto
+                novoLivro.setIdLivro(livro.id_livro);
+                novoLivro.setStatusLivro(livro.status_livro);
+                novoLivro.setCapa(livro.capa);
 
-                // atribui o ID do livro baseado na resposta do banco de dados
-                novoLivro.setIdLivro(linha.id_livro);
-                novoLivro.setStatusLivro(linha.status_livro);
-
-                // adiciona o objeto na lista
-                listaDeLivro.push(novoLivro);
+                // adicionando um livro na lista
+                listaDeLivros.push(novoLivro);
             });
 
-            // retorna a lista de livros
-            return listaDeLivro;
+            // retornado a lista de livros para quem chamou a função
+            return listaDeLivros;
+
+            // captura qualquer erro que aconteça
         } catch (error) {
-            console.log('Erro ao buscar lista de livros');
-            return null; // retorna null em caso de erro
+            // exibe detalhes do erro no console
+            console.log(`Erro ao acessar o modelo: ${error}`);
+            // retorna um valor nulo
+            return null;
         }
     }
 
     /**
-     * Realiza o cadastro de um livro no banco de dados.
-     * 
-     * Esta função recebe um objeto do tipo `Livro` e insere seus dados (titulo, autor, editora, ano de publicação, isbn,
-     * quantidade total, quantidade disponível, valor de aquisição e status de empréstimo) na tabela `livro` do banco de dados. 
-     * O método retorna um valor booleano indicando se o cadastro foi realizado com sucesso.
-     * 
-     * @param {Livro} livro - Objeto contendo os dados do livro que será cadastrado. O objeto `Livro`
-     *                        deve conter os métodos `getTitulo()`, `getAutor()`, `getEditora()`, `getAnoPublicacao()`, 
-     *                        `getIsbn()`, `getQuantTotal()`, `getQuantDisponivel()`, `getValorAquisicao()` e 
-     *                        `getStatusLivroEmprestado()` que retornam os respectivos valores do livro.
-     * @returns {Promise<boolean>} - Retorna `true` se o livro foi cadastrado com sucesso e `false` caso contrário.
-     *                               Em caso de erro durante o processo, a função trata o erro e retorna `false`.
-     * 
-     * @throws {Error} - Se ocorrer algum erro durante a execução do cadastro, uma mensagem de erro é exibida
-     *                   no console junto com os detalhes do erro.
+     * Cadastra um novo livro no banco de dados
+     * @param livro Objeto Livro contendo as informações a serem cadastradas
+     * @returns Boolean indicando se o cadastro foi bem-sucedido
      */
-    static async cadastroLivro(livro: Livro): Promise<boolean> {
+    static async cadastrarLivro(livro: Livro): Promise<{ queryResult: boolean, idLivro?: number }> {
+        // variável de controle da execução da query
+        let insertResult = false;
+        let objetoResposta = { queryResult: false, idLivro: 0 };
+
         try {
-            // query para fazer insert de um livro no banco de dados
-            const queryInsertLivro = `INSERT INTO livro (titulo, autor, editora, ano_publicacao, isbn, quant_total, quant_disponivel, valor_aquisicao, status_livro_emprestado) 
-                                    VALUES 
-                                    ('${livro.getTitulo()}', 
-                                    '${livro.getAutor()}', 
-                                    '${livro.getEditora()}', 
-                                    '${livro.getAnoPublicacao()}', 
-                                    '${livro.getIsbn()}', 
-                                    ${livro.getQuantTotal()}, 
-                                    ${livro.getQuantDisponivel()}, 
-                                    ${livro.getValorAquisicao()}, 
-                                    '${livro.getStatusLivroEmprestado()}')
-                                    RETURNING id_livro;`;
+            // Cria a consulta (query) para inserir livro na tabela retornado o ID do livro
+            const queryInsertLivro = `
+                INSERT INTO Livro (titulo, autor, editora, ano_publicacao, isbn, quant_total, quant_disponivel, valor_aquisicao, status_livro_emprestado)
+                VALUES (
+                    '${livro.getTitulo().toUpperCase()}',
+                    '${livro.getAutor().toUpperCase()}',
+                    '${livro.getEditora().toUpperCase()}',
+                    '${livro.getAnoPublicacao().toUpperCase()}',
+                    '${livro.getISBN().toUpperCase()}',
+                    '${livro.getQuantTotal()}',
+                    '${livro.getQuantDisponivel()}',
+                    '${livro.getValorAquisicao()}',
+                    '${livro.getStatusLivroEmprestado().toUpperCase()}'
+                )
+                RETURNING id_livro;`;
 
-            // executa a query no banco e armazena a resposta
-            const respostaBD = await database.query(queryInsertLivro);
+            // executa a consulta no banco e armazena o resultado
+            const result = await database.query(queryInsertLivro);
 
-            // verifica se a quantidade de linhas modificadas é diferente de 0
-            if (respostaBD.rowCount != 0) {
-                console.log(`Livro cadastrado com sucesso! ID do livro: ${respostaBD.rows[0].id_livro}`);
-                // true significa que o cadastro foi feito
-                return true;
+            // verifica se o número de linhas alteradas no banco de dados é maior que 0
+            if (result.rows.length > 0) {
+                // exibe mensagem de sucesso no console
+                console.log(`Livro cadastrado com sucesso. ID: ${result.rows[0].id_livro}`);
+                // altera o valor da variável de controle para verdadeiro
+                insertResult = true;
+                // salva o ID do livro em uma variável
+                let idLivro = result.rows[0].id_livro;
+
+                // Montar o objeto de resposta
+                objetoResposta = { queryResult: insertResult, idLivro: idLivro }
             }
-            // false significa que o cadastro NÃO foi feito.
-            return false;
 
+            // retorna o valor da variável de controle
+            return objetoResposta;
+            // captura qualquer tipo de erro que possa acontecer
         } catch (error) {
-            // imprime outra mensagem junto com o erro
-            console.log('Erro ao cadastrar o livro. Verifique os logs para mais detalhes.');
-            // imprime o erro no console
-            console.log(error);
-            // retorno um valor falso
-            return false; // retorna false em caso de erro
+            console.error(`Erro ao cadastrar livro: ${error}`);
+            return { queryResult: false };
         }
     }
 
     /**
-        * Remove um livro do banco de dados
-        * @param idLivro ID do livro a ser removido
-        * @returns Boolean indicando se a remoção foi bem-sucedida
-       */
+     * Remove um livro do banco de dados
+     * @param idLivro ID do livro a ser removido
+     * @returns Boolean indicando se a remoção foi bem-sucedida
+    */
     static async removerLivro(id_livro: number): Promise<Boolean> {
         // variável de controle da execução da query
         let queryResult = false;
 
         try {
             // Cria a consulta para rmeover empréstimo do banco de dados
-            const queryDeleteEmprestimoLivro = `UPDATE emprestimo SET status_emprestimo_registro = FALSE WHERE id_livro=${id_livro}`;
+            const queryDeleteEmprestimoLivro = `UPDATE emprestimo
+                                                    SET status_emprestimo_registro = FALSE 
+                                                    WHERE id_livro=${id_livro}`;
+
             // executa a query para remover empréstimo
             await database.query(queryDeleteEmprestimoLivro);
 
             // Construção da query SQL para deletar o Livro.
-            const queryDeleteLivro = `UPDATE livro SET status_livro = FALSE WHERE id_livro=${id_livro};`;
+            const queryDeleteLivro = `UPDATE livro
+                                        SET status_livro = FALSE 
+                                        WHERE id_livro=${id_livro};`;
 
             // Executa a query de exclusão e verifica se a operação foi bem-sucedida.
             await database.query(queryDeleteLivro)
@@ -409,36 +405,57 @@ export class Livro {
         }
     }
 
-    static async atualizarLivro(livro: Livro): Promise<boolean> {
+    /**
+     * Atualiza os dados de um livro no banco de dados.
+     * @param livro Objeto do tipo Livro com os novos dados
+     * @returns true caso sucesso, false caso erro
+     */
+    static async atualizarCadastroLivro(livro: Livro): Promise<Boolean> {
+        let queryResult = false; // Variável para armazenar o resultado da operação.
         try {
-            // query para fazer update no banco de dados
-            const queryUpdateLivro = `UPDATE livro SET 
-                                    titulo = '${livro.getTitulo()}',
-                                    autor = '${livro.getAutor()}',
-                                    editora = '${livro.getEditora()}',
-                                    ano_publicacao = '${livro.getAnoPublicacao()}',
-                                    isbn = '${livro.getIsbn()}',
-                                    quant_total = ${livro.getQuantTotal()},
-                                    quant_disponivel = ${livro.getQuantDisponivel()},
-                                    valor_aquisicao = ${livro.getValorAquisicao()},
-                                    status_livro_emprestado = '${livro.getStatusLivroEmprestado()}'
-                                    WHERE id_livro = ${livro.getIdLivro()};`;
+            // Construção da query SQL para atualizar os dados do livro no banco de dados.
+            const queryAtualizarLivro = `UPDATE Livro SET 
+                                            titulo = '${livro.getTitulo().toUpperCase()}', 
+                                            autor = '${livro.getAutor().toUpperCase()}',
+                                            editora = '${livro.getEditora().toUpperCase()}', 
+                                            ano_publicacao = '${livro.getAnoPublicacao().toUpperCase()}',
+                                            isbn = '${livro.getISBN().toUpperCase()}', 
+                                            quant_total = ${livro.getQuantTotal()},
+                                            quant_disponivel = ${livro.getQuantDisponivel()},
+                                            valor_aquisicao = ${livro.getValorAquisicao()},
+                                            status_livro_emprestado = '${livro.getStatusLivroEmprestado().toUpperCase()}'                                           
+                                        WHERE id_livro = ${livro.idLivro}`;
 
-            // executa a query no banco de dados
-            const respostaBD = await database.query(queryUpdateLivro);
+            // Executa a query de atualização e verifica se a operação foi bem-sucedida.
+            await database.query(queryAtualizarLivro)
+                .then((result) => {
+                    if (result.rowCount != 0) {
+                        queryResult = true; // Se a operação foi bem-sucedida, define queryResult como true.
+                    }
+                });
 
-            // verifica se a quantidade de linhas modificadas é diferente de 0
-            if (respostaBD.rowCount != 0) {
-                console.log(`Livro atualizado com sucesso! ID do livro: ${livro.getIdLivro()}`);
-                // true significa que a atualização foi realizada
-                return true;
-            }
-            // false significa que a atualização NÃO foi realizada
-            return false;
+            // Retorna o resultado da operação para quem chamou a função.
+            return queryResult;
+            // captura qualquer erro que possa acontecer
         } catch (error) {
-            console.log('Erro ao atualizar o livro. Verifique os logs para mais detalhes.');
-            console.log(error);
-            return false;
+            // exibe detalhes do erro no console
+            console.log(`Erro na consulta: ${error}`);
+            // retorna o valor da variável de controle
+            return queryResult;
         }
+    }
+
+    /**
+     * Atualiza a capa do livro
+     * 
+     * @param nomeArquivo Nome do arquivo a ser salvo no banco de dados
+     * @param idLivro ID do livro associado ao arquivo
+     */
+    static async atualizarImagemCapa(nomeArquivo: string, idLivro: number): Promise<void> {
+        // Define a query SQL que atualiza o campo capa do livro com o nome do arquivo
+        const query = `UPDATE livro SET capa = $1 WHERE id_livro = $2`;
+
+        // Executa a query passando o nome do arquivo e o id do livro como parâmetros
+        await database.query(query, [nomeArquivo, idLivro]);
     }
 }

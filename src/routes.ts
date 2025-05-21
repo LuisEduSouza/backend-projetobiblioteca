@@ -3,7 +3,7 @@ import { SERVER_ROUTES } from "./appConfig";
 import AlunoController from "./controller/AlunoController";
 import LivroController  from "./controller/LivroController";
 import EmprestimoController  from "./controller/EmprestimoController";
-import upload from "./config/multerConfig";
+import {upload, uploadCapa} from "./config/multerConfig";
 import UsuarioController from "./controller/UsuarioController";
 
 const router = express.Router();
@@ -20,7 +20,7 @@ router.put(SERVER_ROUTES.ATUALIZAR_ALUNO, AlunoController.atualizar);
 
 //CRUD Livro
 router.get(SERVER_ROUTES.LISTAR_LIVROS, LivroController.todos);
-router.post(SERVER_ROUTES.NOVO_LIVRO, LivroController.novo);
+router.post(SERVER_ROUTES.NOVO_LIVRO, uploadCapa.single('capa'), LivroController.cadastrar);
 router.put(SERVER_ROUTES.REMOVER_LIVRO, LivroController.remover);
 router.put(SERVER_ROUTES.ATUALIZAR_LIVRO, LivroController.atualizar);
 
